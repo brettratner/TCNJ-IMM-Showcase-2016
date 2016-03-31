@@ -1,1 +1,0 @@
-D:\xampp\htdocs\wordpress\wp-load.php
