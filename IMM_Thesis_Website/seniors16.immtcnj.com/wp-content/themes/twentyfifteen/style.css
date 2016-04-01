@@ -1401,14 +1401,12 @@ header .navigation .links{
    		float: none;
 		opacity: 0;
 		display: inline-block;
-		height: 0px;
 		padding: 0 20px;
    	}
 
 	header.toggleNav .navigation{
    		margin: auto;
 		opacity: 1;
-		height: 100px;
 		text-align: center;
 		padding: 20px;
    	}
@@ -6889,6 +6887,7 @@ a.boxed:hover:before{
 
 /* Footer Stuff */
 .site-info {
+	font-size: 0.5em;
 	padding: 5% 10%;
 }
 

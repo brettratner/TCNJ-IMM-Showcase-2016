@@ -20,17 +20,17 @@
 					<table id="contactIcons">
 						<tr>
 							<td style="text-align:left;">
-								<a href="https://www.dribbble.com/nivih" target="_blank">
+								<a href="https://www.facebook.com/immtcnj/" target="_blank">
 									<i class="fa fa-facebook-square"></i>
 								</a>
 							</td>
 							<td style="text-align:center;">
-								<a href="https://www.linkedin.com/pub/niveda-harishankar/7b/235/489" target="_blank" >
+								<a href="https://twitter.com/immtcnj" target="_blank" >
 									<i class="fa fa-twitter-square"></i>
 								</a>
 							</td>
 							<td style="text-align:right;">
-								<a href="https://www.behance.net/NYNivi" target="_blank">
+								<a href="https://www.instagram.com/immseniorshowcase16/" target="_blank">
 									<i class="fa fa-instagram"></i>
 								</a>
 							</td>
