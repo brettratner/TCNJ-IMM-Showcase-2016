@@ -235,7 +235,7 @@ function acui_import_users( $file, $form_data, $attach_id = 0, $is_cron = false 
 										
 										if( empty( $data[ $i ] ) ){
 											if( $empty_cell_action == "delete" )
-												delete_post_meta( $user_id, $headers[ $i ] );
+												delete_user_meta( $user_id, $headers[ $i ] );
 											else
 												continue;	
 										}
