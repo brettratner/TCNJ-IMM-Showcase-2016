@@ -25,10 +25,10 @@ get_header(); ?>
 					</p>
 					<p style="margin-bottom:0px;">
 						<span style="background: #F76161;">
-							April 25th
+							April 29th
 						</span>
 						<span style="background: #00C2F2;">
-							5-9 pm
+							5-10 pm
 						</span>
 						<span style="background: #FFE161;">
 							The College of New Jersey

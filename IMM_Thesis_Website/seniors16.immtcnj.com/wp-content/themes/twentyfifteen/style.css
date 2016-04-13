@@ -104,6 +104,7 @@ main,
 nav,
 section {
 	display: block;
+	background-color: #eee;
 }
 
 ol,
@@ -1700,7 +1701,7 @@ header .navigation .links{
  */
 
 .hentry {
-	background-color: #fff;
+	background-color: #eee;
 	padding-top: 7.6923%;
 	position: relative;
 }
@@ -2894,7 +2895,6 @@ p > video {
 	.hentry,
 	.page-header,
 	.page-content {
-		box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
 		margin: 0 7.6923%;
 	}
 
@@ -6979,6 +6979,10 @@ a.boxed:hover:before{
 	.homepage .row:nth-child(2) img{
 		min-width: 80%;
 	}
+	.element.excerpt_read_more{
+		display: none;
+	}
+
 }
 
 @media (max-width: 580px) {
