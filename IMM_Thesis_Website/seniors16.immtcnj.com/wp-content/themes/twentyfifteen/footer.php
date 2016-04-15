@@ -14,39 +14,15 @@
 
 	<footer id="colophon" class="site-footer" role="contentinfo">
 		<div class="site-info">
-			<div style="overflow:hidden;">
-				<div style="display:inline-block;float:left;">
-					<p style="margin-bottom:10px;">Keep up-to-date with us</p>
-					<table id="contactIcons">
-						<tr>
-							<td style="text-align:left;">
-								<a href="https://www.facebook.com/immtcnj/" target="_blank">
-									<i class="fa fa-facebook-square"></i>
-								</a>
-							</td>
-							<td style="text-align:center;">
-								<a href="https://twitter.com/immtcnj" target="_blank" >
-									<i class="fa fa-twitter-square"></i>
-								</a>
-							</td>
-							<td style="text-align:right;">
-								<a href="https://www.instagram.com/immseniorshowcase16/" target="_blank">
-									<i class="fa fa-instagram"></i>
-								</a>
-							</td>
-						</tr>
-					</table>
-				</div>
-				<div style="display:inline-block;float:right;">
-					<p>The College of New Jersey,</p>
-					<p>AIMM building</p>
-					<p>2000 Pennington Road,</p>
-					<p>Ewing, NJ 08628</p>
-				</div>
-			</div>
-			<div>
-				Copyright &#169; 2016 IMM
-			</div>
+			<?php
+				/**
+				 * Fires before the Twenty Fifteen footer text for footer customization.
+				 *
+				 * @since Twenty Fifteen 1.0
+				 */
+				do_action( 'twentyfifteen_credits' );
+			?>
+			<a href="<?php echo esc_url( __( 'https://wordpress.org/', 'twentyfifteen' ) ); ?>"><?php printf( __( 'Proudly powered by %s', 'twentyfifteen' ), 'WordPress' ); ?></a>
 		</div><!-- .site-info -->
 	</footer><!-- .site-footer -->
 

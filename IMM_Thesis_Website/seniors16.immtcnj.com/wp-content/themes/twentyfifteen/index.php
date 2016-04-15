@@ -18,10 +18,8 @@ get_header(); ?>
 
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main" role="main">
-			<div style="display: table; text-align: center; width: 100%; height: 100vh;">
-				<p style="display: table-cell; vertical-align: middle;">This is the homepage</p>
-			</div>
-		<?php /*if ( have_posts() ) : ?>
+
+		<?php if ( have_posts() ) : ?>
 
 			<?php if ( is_home() && ! is_front_page() ) : ?>
 				<header>
@@ -33,6 +31,11 @@ get_header(); ?>
 			// Start the loop.
 			while ( have_posts() ) : the_post();
 
+				/*
+				 * Include the Post-Format-specific template for the content.
+				 * If you want to override this in a child theme, then include a file
+				 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
+				 */
 				get_template_part( 'content', get_post_format() );
 
 			// End the loop.
@@ -50,7 +53,6 @@ get_header(); ?>
 			get_template_part( 'content', 'none' );
 
 		endif;
-		*/
 		?>
 
 		</main><!-- .site-main -->
