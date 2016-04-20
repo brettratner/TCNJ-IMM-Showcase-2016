@@ -50,7 +50,7 @@ get_header(); ?>
 		<div class="row" style="position:relative;">
 			<div>
 			</div>
-			<div class ="container" style="position:relative;z-index:2;">
+			<div class ="container" style="position:relative;">
 				<div class="col-xs-12">
 					<h1>What is the Senior Showcase?</h1>
 					<p>
