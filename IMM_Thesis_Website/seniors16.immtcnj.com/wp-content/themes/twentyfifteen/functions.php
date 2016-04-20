@@ -142,6 +142,12 @@ add_action( 'after_setup_theme', 'twentyfifteen_setup' );
  *
  * @link https://codex.wordpress.org/Function_Reference/register_sidebar
  */
+
+function top_header_menu(){
+	register_nav_menu('top-header-menu',__('Top Header Menu'));
+}
+add_action('init', 'top_header_menu');
+
 function twentyfifteen_widgets_init() {
 	register_sidebar( array(
 		'name'          => __( 'Widget Area', 'twentyfifteen' ),
