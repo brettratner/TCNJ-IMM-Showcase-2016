@@ -1,0 +1,38 @@
+.remove-answer{ text-decoration: none;font-size: 14px;font-family: tahoma;color: rgb(172, 4, 4); }
+p.submit{
+	background: #f0f0f0;
+	padding-left: 40px;
+	text-align: left;
+}
+
+.configuration-form input{
+	max-width: 400px;
+}
+
+.colorSelector{
+	padding: 5px 10px;
+	border: 1px solid #AAA;
+}
+
+td.column-ordered:hover {
+	background-image: url(../img/drag_arrow.png);
+	background-repeat: no-repeat;
+	background-position: 20px center;
+	cursor: move;
+}
+
+.sheepItForm_template{
+    margin: 0px 10px 10px 0px;
+}
+#sheepItForm_controls div, #sheepItForm_controls div input {
+    float:left;
+    margin: 0px 10px 10px 0px;
+}
+
+div.tagsinput { border:1px solid #CCC; background: #FFF; padding:5px; width:600px; height:100px; overflow-y: auto;}
+div.tagsinput span.tag { border: 1px solid #a5d24a; -moz-border-radius:2px; -webkit-border-radius:2px; display: block; float: left; padding: 5px; text-decoration:none; background: #cde69c; color: #638421; margin-right: 5px; margin-bottom:5px;font-family: helvetica;  font-size:13px;}
+div.tagsinput span.tag a { font-weight: bold; color: #82ad2b; text-decoration:none; font-size: 11px;  }
+div.tagsinput input { width:80px; margin:0px; font-family: helvetica; font-size: 13px; border:1px solid transparent; padding:5px; background: transparent; color: #000; outline:0px;  margin-right:5px; margin-bottom:5px; }
+div.tagsinput div { display:block; float: left; }
+.tags_clear { clear: both; width: 100%; height: 0px; }
+.not_valid {background: #FBD8DB !important; color: #90111A !important;}

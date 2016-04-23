@@ -14,17 +14,29 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 		$layout = $class_post_grid_functions->layout_content($layout_content);
 		}
 	else{
-		$layout = $post_grid_layout_content[$layout_content];
+		
+		if(!empty($post_grid_layout_content[$layout_content])){
+			$layout = $post_grid_layout_content[$layout_content];
+			
+			}
+		else{
+			$layout = array();
+			}
+		
+		
+		
 		
 		}
-	
-	//$layout = $class_post_grid_functions->layout_content($layout_content);
-	
-	
+		
 
-	$html.='<div class="layer-content">';	
-	
-	foreach($layout as $item_key=>$item_info){
+		
+		
+
+	$html_content = '';
+
+	$html.='<div class="layer-content">';
+
+	foreach($layout as $item_id=>$item_info){
 		
 		$item_key = $item_info['key'];
 		
@@ -35,21 +47,17 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 		
 		
 		if($item_key=='title'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
-
-				$html.= wp_trim_words(get_the_title(), $char_limit,'');
-
-			$html.='</div>';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			$html_content.= apply_filters('post_grid_filter_grid_item_title',wp_trim_words(get_the_title(), $char_limit,''));
+			$html_content.='</div>';
 			}
 			
 		elseif($item_key=='title_link'){
 
+				$html_content.= '<a class="element element_'.$item_id.' '.$item_key.'" href="'.get_permalink().'">'.apply_filters('post_grid_filter_grid_item_title',wp_trim_words(get_the_title(), $char_limit,'')).'</a>';
+
+			}			
 			
-
-				$html.= '<a class="element '.$item_key.'" style="'.$item_info['css'].'" href="'.get_permalink().'">'.wp_trim_words(get_the_title(), $char_limit,'').'</a>';
-
-
-			}	
 			
 		elseif($item_key=='thumb'){
 			
@@ -57,11 +65,11 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 			$thumb_url = $thumb['0'];
 	
 
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 			if(!empty($thumb_url)){
-				$html.= '<img src="'.$thumb_url.'" />';
+				$html_content.= '<img src="'.$thumb_url.'" />';
 				}
-			$html.='</div>';
+			$html_content.='</div>';
 			}			
 			
 		elseif($item_key=='thumb_link'){
@@ -70,100 +78,241 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 			$thumb_url = $thumb['0'];
 	
 
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 			
 			if(!empty($thumb_url)){
-				$html.= '<a href="'.get_permalink().'"><img src="'.$thumb_url.'" /></a>';
+				$html_content.= '<a href="'.get_permalink().'"><img src="'.$thumb_url.'" /></a>';
 				}
 				
-			$html.='</div>';
+			$html_content.='</div>';
+			}			
+			
+			
+		elseif($item_key=='content'){
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			$the_content = apply_filters( 'the_content', get_the_content() );
+			$html_content.= apply_filters('post_grid_filter_grid_item_content', $the_content);	
+			
+			//$html_content.= apply_filters( 'the_content', get_the_content() );
+			$html_content.='</div>';
 			}			
 			
 			
 		elseif($item_key=='excerpt'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
-				$html.= wp_trim_words(get_the_excerpt(), $char_limit,'');
-			$html.='</div>';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			$html_content.= apply_filters('post_grid_filter_grid_item_excerpt',wp_trim_words(get_the_excerpt(), $char_limit,''));		
+
+			//$html_content.= wp_trim_words(get_the_excerpt(), $char_limit,'');
+			$html_content.='</div>';
 			}
 
-		elseif($item_key=='content'){
-			$html.='<div class="element element_'.$item_id.' '.$item_key.'" style="'.$item_info['css'].'" >';
-				$html.= apply_filters( 'the_content', get_the_content() );
-			$html.='</div>';
-			}	
-
-
 		elseif($item_key=='read_more'){
+	
+			if(!empty($item_info['read_more_text'])){
+				$read_more_text = $item_info['read_more_text'];	
+				}
+			else{
+				
+					
+				
+				
+				$read_more_text = apply_filters('post_grid_filter_grid_item_read_more', __('Read more.', post_grid_textdomain));
+				
+				
+				}
 
-				$html.= '<a class="element '.$item_key.'" style="'.$item_info['css'].'" href="'.get_permalink().'">'.__('Read more.', post_grid_textdomain).'</a>';
+
+				$html_content.= '<a class="element element_'.$item_id.' '.$item_key.'"  href="'.get_permalink().'">'.$read_more_text.'</a>';
 
 			}			
 	
 		elseif($item_key=='excerpt_read_more'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
-				$html.= wp_trim_words(get_the_excerpt(), $char_limit,'').' <a class="read-more" href="'.get_permalink().'">'.__('Read more.', post_grid_textdomain).'</a>';
-			$html.='</div>';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			
+			$read_more_text = apply_filters('post_grid_filter_grid_item_read_more', __('Read more.', post_grid_textdomain));
+			
+			$html_content.= wp_trim_words(get_the_excerpt(), $char_limit,'').' <a class="read-more" href="'.get_permalink().'">'.$read_more_text.'</a>';
+			$html_content.='</div>';
 			}
 			
 		elseif($item_key=='post_date'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
-				$html.= get_the_date();
-			$html.='</div>';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			$html_content.= apply_filters('post_grid_filter_grid_item_post_date', get_the_date());	
+			
+			//$html_content.= get_the_date();
+			$html_content.='</div>';
 			}			
 			
 		elseif($item_key=='author'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
-				$html.= get_the_author();
-			$html.='</div>';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			$html_content.= apply_filters('post_grid_filter_grid_item_author', get_the_author());			
+			
+			//$html_content.= get_the_author();
+			$html_content.='</div>';
 			}	
 			
 		elseif($item_key=='categories'){
 			
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 				$categories = get_the_category();
 				$separator = ' ';
 				$output = '';
 				if ( ! empty( $categories ) ) {
 					foreach( $categories as $category ) {
-						$html .= '<a href="' . esc_url( get_category_link( $category->term_id ) ) . '" alt="' . esc_attr( sprintf( __( 'View all posts in %s', 'textdomain' ), $category->name ) ) . '">' . esc_html( $category->name ) . '</a>' . $separator;
+						$html_content .= '<a href="' . esc_url( get_category_link( $category->term_id ) ) . '" title="' . esc_attr( sprintf( __( 'View all posts in %s', 'post_grid_textdomain' ), $category->name ) ) . '">' . esc_html( $category->name ) . '</a>' . $separator;
 					}
-					$html.= trim( $output, $separator );
+					$html_content.= trim( $output, $separator );
 				}
-			$html.='</div>';
+			$html_content.='</div>';
 		}					
 			
 		elseif($item_key=='tags'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 				$posttags = get_the_tags();
 				if ($posttags) {
 				  foreach($posttags as $tag){
-					$html.= '<a href="'.get_tag_link($tag->term_id).'">'.$tag->name . '</a> , ';
+					$html_content.= '<a href="#">'.$tag->name . '</a> ';
 					}
 				}
-			$html.='</div>';
+			$html_content.='</div>';
 		}
 		
 		elseif($item_key=='comments_count'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 			
 				$comments_number = get_comments_number( get_the_ID() );
 				
 				if(comments_open()){
 					
 					if ( $comments_number == 0 ) {
-							$html.= __('No Comments',post_grid_textdomain);
+							$html_content.= __('No Comments',post_grid_textdomain);
 						} elseif ( $comments_number > 1 ) {
-							$html.= $comments_number . __(' Comments',post_grid_textdomain);
+							$html_content.= $comments_number . __(' Comments',post_grid_textdomain);
 						} else {
-							$html.= __('1 Comment',post_grid_textdomain);
+							$html_content.= __('1 Comment',post_grid_textdomain);
 						}
 		
 					}
-			$html.='</div>';
+			$html_content.='</div>';
+		}	
+		
+		
+		elseif($item_key=='comments'){
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			$html_content.= '<h3 class="comment-content ">'.__('Comments', post_grid_textdomain).'</h3>';
+			
+			
+			$comments_count =  wp_count_comments(get_the_ID());
+			$total_comments = $comments_count->approved;
+			
+			//var_dump(get_the_ID());
+	
+			
+			if($total_comments <= 0)
+				{
+	
+					$html_content.= '<div class="comment no-comment">';
+					$html_content.= '<p class="comment-content ">'.__('No comments yet',post_grid_textdomain).'</p>';											
+					
+					$html_content.= '</div>';
+					
+				}
+			else
+				{
+	
+					
+					$comments = get_comments(array(
+						'post_id' => get_the_ID(),
+						'status' => 'approve',
+						'number' => 5,				
+						'order' => 'ASC',
+					));
+			
+	
+	
+	
+					if(empty($comments))
+						{
+	
+							$html_content.= '<div class="comment no-more-comment">';
+							$html_content.= '<p class="comment-content ">'.__('No More comments',post_grid_textdomain).'';											
+							$html_content.= '</p>';							
+							$html_content.= '</div>';
+	
+						}
+					else
+						{
+							
+							$html_content.= '<div id="comments" class="comments-area">';							
+							$html_content.= '<ol class="commentlist">';
+							
+							foreach($comments as $comment) :
+							
+							
+								$comment_ID = $comment->comment_ID;
+								$comment_author = $comment->comment_author;							
+								$comment_author_email = $comment->comment_author_email;
+								$comment_content = $comment->comment_content;						
+								$comment_date = $comment->comment_date;						
+							
+							
+							
+							
+								$html_content.= '<li class="comment">';
+								$html_content.= '<article id="" class="comment">';	
+								$html_content.= '<header class="comment-meta comment-author vcard">';
+								
+								$html_content.= get_avatar($comment_author_email, 50);	
+								
+								$html_content.= '<cite><b class="fn">'.$comment_author.'</b></cite>';								
+								$html_content.= '<time >'.$comment_date.'</time>';								
+																									
+								$html_content.= '</header>';								
+								$html_content.= '<section class="comment-content comment">';
+								$html_content.= '<p>'.$comment_content.'</p>';									
+								$html_content.= '</section>';															
+
+								$html_content.= '</article>';								
+													
+								$html_content.= '</li>';
+								
+							endforeach;
+							
+							$html_content.= '</ol>';
+							$html_content.= '</div>';							
+							
+						}
+	
+	
+	
+				
+				}
+
+
+
+
+			$html_content.='</div>';
 		}		
 		
+		
+		elseif($item_key=='rating_widget'){
+			
+			
+				$active_plugins = get_option('active_plugins');
+				if(in_array( 'rating-widget/rating-widget.php', (array) $active_plugins )){
+					
+					$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+					$html_content.=do_shortcode('[ratingwidget post_id="'.get_the_ID().'"]');
+					$html_content.='</div>';
+					
+					}
+			
+			}	
+		
+			
+		
 		elseif($item_key=='wc_gallery'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 			
 				$is_product = get_post_type( get_the_ID() );
 				$active_plugins = get_option('active_plugins');
@@ -183,13 +332,13 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 	
 				
 				
-				$html.= $gallery_html;
+				$html_content.= $gallery_html;
 				}
-			$html.='</div>';
+			$html_content.='</div>';
 		}		
 		
 		elseif($item_key=='wc_full_price'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 			
 				$is_product = get_post_type( get_the_ID() );
 				$active_plugins = get_option('active_plugins');
@@ -198,15 +347,15 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 				
 				$full_price = $product->get_price_html();
 				
-				$html.=$full_price;
+				$html_content.=$full_price;
 				}
-			$html.='</div>';
+			$html_content.='</div>';
 		}		
 		
 		
 		
 		elseif($item_key=='wc_sale_price'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 			
 				$is_product = get_post_type( get_the_ID() );
 				$active_plugins = get_option('active_plugins');
@@ -217,18 +366,18 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 				$sale_price = $product->get_sale_price();
 				
 				if(!empty($sale_price)){
-					$html.=$currency_symbol.$sale_price;
+					$html_content.=$currency_symbol.$sale_price;
 					}
 				else{
-					$html.= '';
+					$html_content.= '';
 					}
 				
 				}
-		$html.='</div>';
+		$html_content.='</div>';
 		}		
 		
 		elseif($item_key=='wc_regular_price'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 			
 				$is_product = get_post_type( get_the_ID() );
 				$active_plugins = get_option('active_plugins');
@@ -240,18 +389,18 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 				$regular_price = $product->get_regular_price();
 				
 				if(!empty($regular_price)){
-					$html.=$currency_symbol.$regular_price;
+					$html_content.=$currency_symbol.$regular_price;
 					}
 				else{
-					$html.= '';
+					$html_content.= '';
 					}
 				}
-			$html.='</div>';
+			$html_content.='</div>';
 		}		
 		
 		
 		elseif($item_key=='wc_add_to_cart'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 			
 				$is_product = get_post_type( get_the_ID() );
 				$active_plugins = get_option('active_plugins');
@@ -260,14 +409,14 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 				
 					
 					$add_to_cart = do_shortcode('[add_to_cart show_price="false" id="'.get_the_ID().'"]');
-					$html.= $add_to_cart;
+					$html_content.= $add_to_cart;
 					
 				}
-			$html.='</div>';
+			$html_content.='</div>';
 		}			
 		
 		elseif($item_key=='wc_rating_star'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 			
 				$is_product = get_post_type( get_the_ID() );
 				$active_plugins = get_option('active_plugins');
@@ -287,14 +436,14 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 					
 					}
 	
-				$html.= $rating_html;
+				$html_content.= $rating_html;
 					
 				}
-			$html.='</div>';
+			$html_content.='</div>';
 		}			
 		
 		elseif($item_key=='wc_rating_text'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 			
 				$is_product = get_post_type( get_the_ID() );
 				$active_plugins = get_option('active_plugins');
@@ -306,7 +455,7 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 				
 				if( $rating > 0 ){
 					
-					$rating_html = $rating.' out of 5';
+					$rating_html = $rating.' '.__('out of 5',post_grid_textdomain);
 					
 					}
 				else{
@@ -314,14 +463,14 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 					
 					}
 	
-				$html.= $rating_html;
+				$html_content.= $rating_html;
 					
 				}
-			$html.='</div>';
+			$html_content.='</div>';
 		}
 		
 		elseif($item_key=='wc_categories'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 			
 				$is_product = get_post_type( get_the_ID() );
 				$active_plugins = get_option('active_plugins');
@@ -331,15 +480,15 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 				$categories = $product->get_categories();
 				
 	
-				$html.= $categories;
+				$html_content.= $categories;
 					
 				}
-			$html.='</div>';
+			$html_content.='</div>';
 		}		
 		
 		
 		elseif($item_key=='wc_tags'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 			
 				$is_product = get_post_type( get_the_ID() );
 				$active_plugins = get_option('active_plugins');
@@ -349,14 +498,14 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 				$tags = $product->get_tags();
 				
 	
-				$html.= $tags;
+				$html_content.= $tags;
 					
 				}
-			$html.='</div>';
+			$html_content.='</div>';
 		}		
 		
 		elseif($item_key=='wc_sku'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 			
 				$is_product = get_post_type( get_the_ID() );
 				$active_plugins = get_option('active_plugins');
@@ -366,23 +515,261 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 				$sku = $product->get_sku();
 				
 	
-				$html.= $sku;
+				$html_content.= $sku;
 					
 				}
-			$html.='</div>';
+			$html_content.='</div>';
 		}
 		
+		
+		elseif($item_key=='edd_price'){
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			
+				$is_download = get_post_type( get_the_ID() );
+				$active_plugins = get_option('active_plugins');
+				if(in_array( 'easy-digital-downloads/easy-digital-downloads.php', (array) $active_plugins ) && $is_download=='download'){
+
+				
+				$edd_price = edd_price(get_the_ID(),false);
+
+				$html_content.= $edd_price;
+					
+				}
+			$html_content.='</div>';
+		}		
+		
+		elseif($item_key=='edd_variable_prices'){
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			
+				$is_download = get_post_type( get_the_ID() );
+				$active_plugins = get_option('active_plugins');
+				if(in_array( 'easy-digital-downloads/easy-digital-downloads.php', (array) $active_plugins ) && $is_download=='download'){
+
+				
+				$prices = edd_get_variable_prices( get_the_ID() );
+				if( $prices ) {
+					$html_price = '';
+					$html_price.= '<ul>';
+					foreach( $prices as $price_id => $price ) {
+						$html_price.= '<li>'.$price['name'].': '.$price['amount'].'</li>';; //is the name of the price
+						
+					}
+					$html_price.= '</ul>';
+				}
+
+				$html_content.= $html_price;
+					
+				}
+			$html_content.='</div>';
+		}		
+		
+		
+		elseif($item_key=='edd_sales_stats'){
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			
+				$is_download = get_post_type( get_the_ID() );
+				$active_plugins = get_option('active_plugins');
+				if(in_array( 'easy-digital-downloads/easy-digital-downloads.php', (array) $active_plugins ) && $is_download=='download'){
+
+				$sales_stats = edd_get_download_sales_stats( get_the_ID() );
+				$html_content.= $sales_stats;
+					
+				}
+			$html_content.='</div>';
+		}	
+		
+		
+		elseif($item_key=='edd_earnings_stats'){
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			
+				$is_download = get_post_type( get_the_ID() );
+				$active_plugins = get_option('active_plugins');
+				if(in_array( 'easy-digital-downloads/easy-digital-downloads.php', (array) $active_plugins ) && $is_download=='download'){
+
+				$earnings_stats = edd_get_download_earnings_stats( get_the_ID() );
+				$html_content.= $earnings_stats;
+					
+				}
+			$html_content.='</div>';
+		}				
+		
+		
+		elseif($item_key=='edd_add_to_cart'){
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			
+				$is_download = get_post_type( get_the_ID() );
+				$active_plugins = get_option('active_plugins');
+				if(in_array( 'easy-digital-downloads/easy-digital-downloads.php', (array) $active_plugins ) && $is_download=='download'){
+
+				$purchase_link = do_shortcode('[purchase_link id="'.get_the_ID().'" text="'.__('Add to Cart','post_grid_textdomain').'" style="button"]'  );
+				$html_content.= $purchase_link;
+					
+				}
+			$html_content.='</div>';
+		}			
+		
+		elseif($item_key=='edd_categories'){
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			
+				$is_download = get_post_type( get_the_ID() );
+				$active_plugins = get_option('active_plugins');
+				if(in_array( 'easy-digital-downloads/easy-digital-downloads.php', (array) $active_plugins ) && $is_download=='download'){
+
+				$term_list = wp_get_post_terms($post->ID, 'download_category', array("fields" => "all"));
+				
+				if( $term_list ) {
+					$html_term = '';
+
+					foreach( $term_list as $term ) {
+						$html_term.= '<a href="#">'.$term->name.'</a>, '; //is the name of the price
+					}
+
+				}
+				
+				$html_content.= $html_term;
+					
+				}
+			$html_content.='</div>';
+		}			
+				
+		elseif($item_key=='edd_tags'){
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			
+				$is_download = get_post_type( get_the_ID() );
+				$active_plugins = get_option('active_plugins');
+				if(in_array( 'easy-digital-downloads/easy-digital-downloads.php', (array) $active_plugins ) && $is_download=='download'){
+
+				$term_list = wp_get_post_terms($post->ID, 'download_tag', array("fields" => "all"));
+				
+				if( $term_list ) {
+					$html_term = '';
+
+					foreach( $term_list as $term ) {
+						$html_term.= '<a href="#">'.$term->name.'</a>, '; //is the name of the price
+					}
+
+				}
+				
+				$html_content.= $html_term;
+					
+				}
+			$html_content.='</div>';
+		}		
+		
+		
+		
+		
+		
+		elseif($item_key=='WPeC_old_price'){
+			
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			
+				$is_product = get_post_type( get_the_ID() );
+				$active_plugins = get_option('active_plugins');
+				if(in_array( 'wp-e-commerce/wp-shopping-cart.php', (array) $active_plugins ) && $is_product=='wpsc-product'){
+
+				$html_content.= wpsc_product_normal_price();
+					
+				}
+			$html_content.='</div>';
+		}
+				
+		elseif($item_key=='WPeC_sale_price'){
+			
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			
+				$is_product = get_post_type( get_the_ID() );
+				$active_plugins = get_option('active_plugins');
+				if(in_array( 'wp-e-commerce/wp-shopping-cart.php', (array) $active_plugins ) && $is_product=='wpsc-product'){
+
+				$html_content.= wpsc_the_product_price();
+					
+				}
+			$html_content.='</div>';
+		}		
+		
+		
+		
+		elseif($item_key=='WPeC_rating_star'){
+			
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			
+				$is_product = get_post_type( get_the_ID() );
+				$active_plugins = get_option('active_plugins');
+				if(in_array( 'wp-e-commerce/wp-shopping-cart.php', (array) $active_plugins ) && $is_product=='wpsc-product'){
+
+				$html_content.= wpsc_product_rater();
+					
+				}
+			$html_content.='</div>';
+		}
+		
+
+		elseif($item_key=='WPeC_categories'){
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			
+				$is_product = get_post_type( get_the_ID() );
+				$active_plugins = get_option('active_plugins');
+				if(in_array( 'wp-e-commerce/wp-shopping-cart.php', (array) $active_plugins ) && $is_product=='wpsc-product'){
+
+				$term_list = wp_get_post_terms($post->ID, 'wpsc_product_category', array("fields" => "all"));
+				
+				if( $term_list ) {
+					$html_term = '';
+
+					foreach( $term_list as $term ) {
+						$html_term.= '<a href="#">'.$term->name.'</a>, '; //is the name of the price
+					}
+
+				}
+				
+				$html_content.= $html_term;
+					
+				}
+			$html_content.='</div>';
+		}	
+		
+		elseif($item_key=='WPeC_tags'){
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			
+				$is_product = get_post_type( get_the_ID() );
+				$active_plugins = get_option('active_plugins');
+				if(in_array( 'wp-e-commerce/wp-shopping-cart.php', (array) $active_plugins ) && $is_product=='wpsc-product'){
+
+				$term_list = wp_get_post_terms($post->ID, 'product_tag', array("fields" => "all"));
+				
+				if( $term_list ) {
+					$html_term = '';
+
+					foreach( $term_list as $term ) {
+						$html_term.= '<a href="#">'.$term->name.'</a>, '; //is the name of the price
+					}
+
+				}
+				
+				$html_content.= $html_term;
+					
+				}
+			$html_content.='</div>';
+		}			
+		
+		
+		
+		
+		
 		elseif($item_key=='zoom'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
-			$html.= '<i class="fa fa-search"></i>';
-			$html.='</div>';
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+			$html_content.= '<i class="fa fa-search-plus"></i>';
+			$html_content.='</div>';
 
 		}		
 		
 		elseif($item_key=='share_button'){
-			$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
-			$html.= '
+			$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
 			
+			$html_share_buttons = '';
+			
+			$html_share_buttons.= '
 			<span class="fb">
 				<a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u='.get_permalink().'"> </a>
 			</span>
@@ -391,32 +778,66 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 			</span>
 			<span class="gplus">
 				<a target="_blank" href="https://plus.google.com/share?url='.get_permalink().'"></a>
-			</span>
+			</span>';
 			
-			';
-			$html.='</div>';
+			$html_content.= apply_filters('post_grid_filter_share_buttons',$html_share_buttons);			
+
+			$html_content.='</div>';
 
 		}			
 		
 		elseif($item_key=='hr'){
 
-			$html.= '<hr class="element '.$item_key.'" style="'.$item_info['css'].'" />';
+			$html_content.= '<hr class="element element_'.$item_id.' '.$item_key.'"  />';
 
 		}		
 		
 		elseif($item_key=='meta_key'){
 			
 			$meta_value = get_post_meta(get_the_ID(), $item_info['field_id'],true);
+			
+			
+			
+			$wrapper = $item_info['wrapper'];
+			if(empty($wrapper)){
+				
+				$wrapper = '%s';
+				}	
+			
 			if(!empty($meta_value)){
 				
-				$html.='<div class="element '.$item_key.'" style="'.$item_info['css'].'" >';
-				$html.= do_shortcode($meta_value);
-				$html.='</div>';
+				$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+				$html_content.= str_replace('%s',do_shortcode($meta_value),$wrapper);
+				$html_content.='</div>';
 				
 				}
 
 
-		}					
+		}
+		
+		
+		elseif($item_key=='html'){
+
+			
+			$custom_html = $item_info['html'];
+			if(empty($custom_html)){
+				
+				$custom_html = '';
+				}	
+			
+			if(!empty($custom_html)){
+				
+				$html_content.='<div class="element element_'.$item_id.' '.$item_key.'"  >';
+				$html_content.= do_shortcode($custom_html);
+				$html_content.='</div>';
+				
+				}
+
+
+		}		
+		
+		
+						
 					
 			
 
@@ -424,5 +845,5 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 	
 	
 	
-	
+	$html.= apply_filters('post_grid_filter_html_content', $html_content);
 	$html.='</div>'; // .layer-content

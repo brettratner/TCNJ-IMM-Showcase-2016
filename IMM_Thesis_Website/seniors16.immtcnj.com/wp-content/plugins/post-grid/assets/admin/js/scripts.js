@@ -2,6 +2,40 @@ jQuery(document).ready(function($)
 	{
 
 
+		$(document).on('click', '.post-grid-settings .remove_export_content_layout', function()
+			{
+
+				var file_url = $(this).attr('file-url');
+				
+				if(confirm('Do you really want to remove ?')){
+					
+					
+										
+					jQuery.ajax(
+						{
+					type: 'POST',
+					url: post_grid_ajax.post_grid_ajaxurl,
+					context:this,
+					data: {"action": "post_grid_ajax_remove_export_content_layout","file_url":file_url},
+					success: function(data)
+							{	
+								//alert('Deleted');
+								$(this).html('Deleted');
+
+							}
+						});
+					
+					}
+
+			})
+
+
+
+
+
+
+
+
 		$(document).on('click', '#post-grid-upgrade', function()
 			{
 
@@ -25,7 +59,7 @@ jQuery(document).ready(function($)
 
 
 
-		$(document).on('click', '.reset-content-layouts', function()
+		$(document).on('click', '.post-grid-settings .reset-content-layouts', function()
 			{
 				
 				if(confirm("Do you really want to reset ?" )){
@@ -45,36 +79,43 @@ jQuery(document).ready(function($)
 						});
 					
 					}
-				
-				
 
-				
 			})
 
 
 
 
-		$(document).on('change', '.select-layout-hover', function()
+
+
+		$(document).on('click', '.post-grid-settings .export-content-layouts', function()
 			{
-
-				var layout = $(this).val();		
 				
-				jQuery.ajax(
-					{
-				type: 'POST',
-				url: post_grid_ajax.post_grid_ajaxurl,
-				data: {"action": "post_grid_layout_hover_ajax","layout":layout},
-				success: function(data)
-						{	
-							jQuery(".layer-hover").html(data);
-														
-							
-						}
-					});
-				
-			})	
+					jQuery.ajax(
+						{
+					type: 'POST',
+					context: this,
+					url: post_grid_ajax.post_grid_ajaxurl,
+					data: {"action": "post_grid_export_content_layouts",},
+					success: function(data)
+							{	
+								$(this).html('Export Done!');
 
-		$(document).on('change', '.select-layout-content', function()
+								window.open(data,'_blank');
+
+
+							}
+						});
+
+			})
+
+
+
+
+
+
+
+
+		$(document).on('change', '#post_grid_metabox .select-layout-content', function()
 			{
 				var layout = $(this).val();		
 			
@@ -87,66 +128,44 @@ jQuery(document).ready(function($)
 				success: function(data)
 						{	
 							//jQuery(".layout-content").html(data);
-							jQuery(".layer-content").html(data);
+							jQuery("#post_grid_metabox .layer-content").html(data);
 						}
 					});
 				
 			})	
 
 		
+		
+		$(document).on('click', '#post_grid_metabox .meta-query-list .remove', function()
+			{
+				
+				if(confirm("Do you really want remove ?")){
+					$(this).parent().parent().remove();
+					}				
+
+				
+			})			
+		
 	
 		
-		$(document).on('click', '.post_types', function()
+		
+		
+
+		
+		
+		
+		
+	
+		
+		
+		$(document).on('click', '#post_grid_metabox .clear-post-types', function()
 			{
+				//alert('Hello');
+				$('.post_types option').prop('selected', false);
 				
-				var post_types = $(this).val();
-				var post_id = $(this).attr('post_id');	
-		
-				
-				jQuery.ajax(
-					{
-				type: 'POST',
-				url: post_grid_ajax.post_grid_ajaxurl,
-				data: {"action": "post_grid_get_categories","post_types":post_types,"post_id":post_id},
-				success: function(data)
-						{	
-
-							jQuery(".categories-container").html(data);
-							
-						}
-					});
-				
-			})
+			})		
 		
 		
-
-		
-		
-		
-		
-		$(".post_grid_taxonomy").click(function()
-			{
-				
-
-
-				var taxonomy = jQuery(this).val();
-				
-				jQuery(".post_grid_loading_taxonomy_category").css('display','block');
-
-						jQuery.ajax(
-							{
-						type: 'POST',
-						url: post_grid_ajax.post_grid_ajaxurl,
-						data: {"action": "post_grid_get_taxonomy_category","taxonomy":taxonomy},
-						success: function(data)
-								{	
-									jQuery(".post_grid_taxonomy_category").html(data);
-									jQuery(".post_grid_loading_taxonomy_category").fadeOut('slow');
-								}
-							});
-
-		
-			})
 		
 
 

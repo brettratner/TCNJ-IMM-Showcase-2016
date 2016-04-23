@@ -10,16 +10,16 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 function post_grid_posttype_register() {
  
         $labels = array(
-                'name' => _x('Post Grid', 'post_grid'),
-                'singular_name' => _x('Post Grid', 'post_grid'),
-                'add_new' => _x('New Post Grid', 'post_grid'),
-                'add_new_item' => __('New Post Grid'),
-                'edit_item' => __('Edit Post Grid'),
-                'new_item' => __('New Post Grid'),
-                'view_item' => __('View Post Grid'),
-                'search_items' => __('Search Post Grid'),
-                'not_found' =>  __('Nothing found'),
-                'not_found_in_trash' => __('Nothing found in Trash'),
+                'name' => _x('Post Grid', post_grid_textdomain),
+                'singular_name' => _x('Post Grid', post_grid_textdomain),
+                'add_new' => _x('New Post Grid', post_grid_textdomain),
+                'add_new_item' => __('New Post Grid', post_grid_textdomain),
+                'edit_item' => __('Edit Post Grid', post_grid_textdomain),
+                'new_item' => __('New Post Grid', post_grid_textdomain),
+                'view_item' => __('View Post Grid', post_grid_textdomain),
+                'search_items' => __('Search Post Grid', post_grid_textdomain),
+                'not_found' =>  __('Nothing found', post_grid_textdomain),
+                'not_found_in_trash' => __('Nothing found in Trash', post_grid_textdomain),
                 'parent_item_colon' => ''
         );
  
@@ -57,7 +57,7 @@ function meta_boxes_post_grid()
 		$screens = array( 'post_grid' );
 		foreach ( $screens as $screen )
 			{
-				add_meta_box('post_grid_metabox',__( 'Post Grid Options','post_grid' ),'meta_boxes_post_grid_input', $screen);
+				add_meta_box('post_grid_metabox',__( 'Post Grid Options', post_grid_textdomain ),'meta_boxes_post_grid_input', $screen);
 			}
 	}
 add_action( 'add_meta_boxes', 'meta_boxes_post_grid' );
@@ -79,7 +79,37 @@ function meta_boxes_post_grid_input( $post ) {
 		$post_types = array('post');
 		}	
 	
+	
+/*
 
+	if(!empty($post_grid_meta_options['categories'])){
+		$categories = $post_grid_meta_options['categories'];
+		}
+	else{
+		$categories = array();
+		}
+		
+	if(!empty($post_grid_meta_options['categories_relation'])){
+		$categories_relation = $post_grid_meta_options['categories_relation'];
+		}
+	else{
+		$categories_relation = 'OR';
+		}
+
+*/		
+		
+	
+/*
+
+	if(!empty($post_grid_meta_options['extra_query_parameter'])){
+		$extra_query_parameter = $post_grid_meta_options['extra_query_parameter'];
+		}
+	else{
+		$extra_query_parameter = '';
+		}
+
+*/	
+	
 	
 	if(!empty($post_grid_meta_options['post_status'])){
 		$post_status = $post_grid_meta_options['post_status'];
@@ -88,7 +118,15 @@ function meta_boxes_post_grid_input( $post ) {
 		$post_status = array('publish');
 		}	
 	
-
+	
+	
+	if(!empty($post_grid_meta_options['offset'])){
+		$offset = $post_grid_meta_options['offset'];
+		}
+	else{
+		$offset = '';
+		}
+	
 	
 	if(!empty($post_grid_meta_options['posts_per_page'])){
 		$posts_per_page = $post_grid_meta_options['posts_per_page'];
@@ -118,10 +156,55 @@ function meta_boxes_post_grid_input( $post ) {
 		}
 
 	
+	if(!empty($post_grid_meta_options['query_orderby_meta_key']))
+	$query_orderby_meta_key = $post_grid_meta_options['query_orderby_meta_key'];
+	
+/*
 
+	if(!empty($post_grid_meta_options['meta_query'])){
+		$meta_query = $post_grid_meta_options['meta_query'];
+		}
+	else{
+		$meta_query = array();
+		}	
+
+	if(!empty($post_grid_meta_options['meta_query_relation'])){
+		$meta_query_relation = $post_grid_meta_options['meta_query_relation'];
+		}
+	else{
+		$meta_query_relation = 'OR';
+		}
+
+*/
 	
 	if(!empty($post_grid_meta_options['keyword']))
 	$keyword = $post_grid_meta_options['keyword'];		
+	
+	
+	
+
+	
+	if(!empty($post_grid_meta_options['grid_layout']['name'])){
+		
+		$grid_layout_name = $post_grid_meta_options['grid_layout']['name'];	
+		}
+	else{
+		$grid_layout_name = 'layout_grid';
+		}	
+
+	
+/*
+
+	if(!empty($post_grid_meta_options['grid_layout']['col_multi'])){
+		
+		$grid_layout_col_multi = $post_grid_meta_options['grid_layout']['col_multi'];	
+		}
+	else{
+		$grid_layout_col_multi = 2;
+		}
+
+*/	
+		
 	
 	
 	if(!empty($post_grid_meta_options['layout']['content'])){
@@ -135,6 +218,18 @@ function meta_boxes_post_grid_input( $post ) {
 	
 	if(!empty($post_grid_meta_options['layout']['hover']))
 	$layout_hover = $post_grid_meta_options['layout']['hover'];		
+	
+	
+/*
+
+	if(!empty($post_grid_meta_options['enable_multi_skin'])){
+		$enable_multi_skin = $post_grid_meta_options['enable_multi_skin'];
+		}
+	else{
+		$enable_multi_skin = 'no';
+		}
+
+*/	
 	
 	
 	if(!empty($post_grid_meta_options['skin'])){
@@ -160,6 +255,43 @@ function meta_boxes_post_grid_input( $post ) {
 		$custom_css = '/*Write your CSS code here*/';
 		}
 	
+	
+	if(!empty($post_grid_meta_options['masonry_enable'])){
+		
+		$masonry_enable = $post_grid_meta_options['masonry_enable'];
+		}
+	else{
+		$masonry_enable = 'no';
+		
+		}
+		
+		
+	
+/*
+
+	if(!empty($post_grid_meta_options['lazy_load_enable'])){
+		
+		$lazy_load_enable = $post_grid_meta_options['lazy_load_enable'];
+		}
+	else{
+		$lazy_load_enable = 'no';
+		
+		}
+		
+	if(!empty($post_grid_meta_options['lazy_load_image_src'])){
+		
+		$lazy_load_image_src = $post_grid_meta_options['lazy_load_image_src'];
+		}
+	else{
+		$lazy_load_image_src = '';
+		
+		}
+
+
+*/		
+			
+		
+	
 	if(!empty($post_grid_meta_options['width']['desktop'])){
 		
 		$items_width_desktop = $post_grid_meta_options['width']['desktop'];
@@ -177,7 +309,35 @@ function meta_boxes_post_grid_input( $post ) {
 	else{
 		$items_width_tablet = '280px';
 		
-		}		
+		}	
+		
+		
+/*
+
+	if(!empty($post_grid_meta_options['item_height']['style'])){
+		
+		$items_height_style = $post_grid_meta_options['item_height']['style'];
+		}
+	else{
+		$items_height_style = 'auto_height';
+		
+		}				
+			
+			
+	if(!empty($post_grid_meta_options['item_height']['fixed_height'])){
+		
+		$items_fixed_height = $post_grid_meta_options['item_height']['fixed_height'];
+		}
+	else{
+		$items_fixed_height = '220px';
+		
+		}
+
+*/		
+		
+		
+		
+			
 		
 	if(!empty($post_grid_meta_options['width']['mobile'])){
 		
@@ -188,24 +348,44 @@ function meta_boxes_post_grid_input( $post ) {
 		
 		}		
 			
-	if(!empty($post_grid_meta_options['height']['style'])){
+	if(!empty($post_grid_meta_options['media_height']['style'])){
 		
-		$items_height_style = $post_grid_meta_options['height']['style'];
+		$items_media_height_style = $post_grid_meta_options['media_height']['style'];
 		}
 	else{
-		$items_height_style = 'auto_height';
+		$items_media_height_style = 'auto_height';
 		
 		}				
 			
 			
-	if(!empty($post_grid_meta_options['height']['fixed_height'])){
+	if(!empty($post_grid_meta_options['media_height']['fixed_height'])){
 		
-		$items_fixed_height = $post_grid_meta_options['height']['fixed_height'];
+		$items_media_fixed_height = $post_grid_meta_options['media_height']['fixed_height'];
 		}
 	else{
-		$items_fixed_height = '180px';
+		$items_media_fixed_height = '220px';
 		
-		}				
+		}	
+		
+	if(!empty($post_grid_meta_options['items_bg_color_type'])){
+		
+		$items_bg_color_type = $post_grid_meta_options['items_bg_color_type'];
+		}
+	else{
+		$items_bg_color_type = 'fixed';
+		
+		}		
+					
+			
+	if(!empty($post_grid_meta_options['items_bg_color'])){
+		
+		$items_bg_color = $post_grid_meta_options['items_bg_color'];
+		}
+	else{
+		$items_bg_color = '#fff';
+		
+		}			
+			
 			
 			
 			
@@ -227,7 +407,18 @@ function meta_boxes_post_grid_input( $post ) {
 		
 		}				
 			
-			
+/*
+
+	if(!empty($post_grid_meta_options['thumb_linked'])){
+		
+		$thumb_linked = $post_grid_meta_options['thumb_linked'];
+		}
+	else{
+		$thumb_linked = 'yes';
+		
+		}
+
+*/				
 			
 			
 			
@@ -269,16 +460,98 @@ function meta_boxes_post_grid_input( $post ) {
 		
 		}				
 		
+		
+/*
 
+	if(!empty($post_grid_meta_options['nav_top']['filter'])){
+		
+		$nav_top_filter = $post_grid_meta_options['nav_top']['filter'];
+		}
+	else{
+		$nav_top_filter = 'none';
+		
+		}
+
+*/
+		
+/*
+
+	if(!empty($post_grid_meta_options['nav_top']['filterable_post_per_page'])){
+		
+		$filterable_post_per_page = $post_grid_meta_options['nav_top']['filterable_post_per_page'];
+		}
+	else{
+		$filterable_post_per_page = '3';
+		
+		}	
+				
+	if(!empty($post_grid_meta_options['nav_top']['active_filter'])){
+		
+		$active_filter = $post_grid_meta_options['nav_top']['active_filter'];
+		}
+	else{
+		$active_filter = '*';
+		
+		}
+
+*/		
+		
+			
+		
+		
+/*
+
+	if(!empty($post_grid_meta_options['nav_top']['search'])){
+		
+		$nav_top_search = $post_grid_meta_options['nav_top']['search'];
+		}
+	else{
+		$nav_top_search = 'none';
+		
+		}
+
+*/		
+		
 		
 	if(!empty($post_grid_meta_options['nav_bottom']['pagination_type'])){
 		
 		$pagination_type = $post_grid_meta_options['nav_bottom']['pagination_type'];
 		}
 	else{
-		$pagination_type = 'none';
+		$pagination_type = 'pagination';
 		
 		}		
+		
+		
+	if(!empty($post_grid_meta_options['pagination']['max_num_pages'])){
+		
+		$max_num_pages = $post_grid_meta_options['pagination']['max_num_pages'];
+		}
+	else{
+		$max_num_pages = 0;
+		
+		}		
+		
+		
+	if(!empty($post_grid_meta_options['pagination']['prev_text'])){
+		
+		$pagination_prev_text = $post_grid_meta_options['pagination']['prev_text'];
+		}
+	else{
+		$pagination_prev_text = '« Previous';
+		
+		}		
+		
+		
+	if(!empty($post_grid_meta_options['pagination']['next_text'])){
+		
+		$pagination_next_text = $post_grid_meta_options['pagination']['next_text'];
+		}
+	else{
+		$pagination_next_text = 'Next »';
+		
+		}		
+		
 		
 		
 	if(!empty($post_grid_meta_options['nav_bottom']['pagination_theme'])){
@@ -305,12 +578,12 @@ function meta_boxes_post_grid_input( $post ) {
 
 
         <ul class="tab-nav"> 
-            <li nav="1" class="nav1 active"><i class="fa fa-code"></i> <?php _e('Shortcodes','post_grid'); ?></li>
-            <li nav="2" class="nav2"><i class="fa fa-cubes"></i> <?php _e('Query Post','post_grid'); ?></li>
-            <li nav="3" class="nav3"><i class="fa fa-object-group"></i> <?php _e('Layout','post_grid'); ?></li>
-            <li nav="4" class="nav3"><i class="fa fa-magic"></i> <?php _e('Layout settings','post_grid'); ?></li>            
-            <li nav="5" class="nav4"><i class="fa fa-sliders"></i> <?php _e('Navigations','post_grid'); ?></li>            
-            <li nav="6" class="nav6"><i class="fa fa-css3"></i> <?php _e('Custom Scripts','post_grid'); ?></li>           
+            <li nav="1" class="nav1 active"><i class="fa fa-code"></i> <?php _e('Shortcodes',post_grid_textdomain); ?></li>
+            <li nav="2" class="nav2"><i class="fa fa-cubes"></i> <?php _e('Query Post',post_grid_textdomain); ?></li>
+            <li nav="3" class="nav3"><i class="fa fa-object-group"></i> <?php _e('Layout',post_grid_textdomain); ?></li>
+            <li nav="4" class="nav3"><i class="fa fa-magic"></i> <?php _e('Layout settings',post_grid_textdomain); ?></li>            
+            <li nav="5" class="nav4"><i class="fa fa-sliders"></i> <?php _e('Navigations',post_grid_textdomain); ?></li>            
+            <li nav="6" class="nav6"><i class="fa fa-css3"></i> <?php _e('Custom Scripts',post_grid_textdomain); ?></li>           
             
                      
                        
@@ -319,28 +592,36 @@ function meta_boxes_post_grid_input( $post ) {
 		<ul class="box">
             <li style="display: block;" class="box1 tab-box active">
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Shortcode','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Copy this shortcode and paste on page or post where you want to display post grid. <br />Use PHP code to your themes file to display post grid.','post_grid'); ?></p>
+                    <p class="option-title"><?php _e('Shortcode',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Copy this shortcode and paste on page or post where you want to display post grid. <br />Use PHP code to your themes file to display post grid.',post_grid_textdomain); ?></p>
                     <textarea cols="50" rows="1" style="background:#bfefff" onClick="this.select();" >[post_grid <?php echo 'id="'.$post->ID.'"';?>]</textarea>
                 <br /><br />
-                PHP Code:<br />
+
+                <p class="option-info"><?php _e('PHP Code:',post_grid_textdomain); ?></p>
                 <textarea cols="50" rows="1" style="background:#bfefff" onClick="this.select();" ><?php echo '<?php echo do_shortcode("[post_grid id='; echo "'".$post->ID."']"; echo '"); ?>'; ?></textarea>  
+ 
+
                 </div>
                
             </li>
             <li style="display: none;" class="box2 tab-box ">
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Post Types','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Select post types you want to query post , can be select multiple. <br />Hint: Ctrl + click to select mulitple','post_grid'); ?></p>
+                    <p class="option-title"><?php _e('Post Types',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Select post types you want to query post , can be select multiple. <br />Hint: Ctrl + click to select mulitple',post_grid_textdomain); ?></p>
+                  
+                    <div title="Clear post types selection." onClick="" class="button clear-post-types"> Clear</div>
+                    <br/><br/>
+                  
                     <?php
 					echo post_grid_posttypes($post_types);
 					?>
 
                 </div>
-   
+                     
+                        
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Post Status','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Display post from following post status, <br />Hint: Ctrl + click to select mulitple','post_grid'); ?></p>
+                    <p class="option-title"><?php _e('Post Status',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Display post from following post status, <br />Hint: Ctrl + click to select mulitple',post_grid_textdomain); ?></p>
                     
                     <select class="post_status" name="post_grid_meta_options[post_status][]" multiple >
                         <option value="publish" <?php if(in_array("publish",$post_status)) echo "selected"; ?>>Publish</option>
@@ -357,22 +638,31 @@ function meta_boxes_post_grid_input( $post ) {
                 </div>                         
                         
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Posts per page','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Number of post each pagination. -1 to display all. default is 10 if you left empty.','post_grid'); ?></p>
-                    <input type="text" placeholder="3" name="post_grid_meta_options[posts_per_page]" value="<?php if(!empty($posts_per_page)) echo $posts_per_page; else echo ''; ?>" />
+                    <p class="option-title"><?php _e('Posts per page',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Number of post each pagination. -1 to display all. default is 10 if you left empty.',post_grid_textdomain); ?></p>
+                    <input type="text" placeholder="3" name="post_grid_meta_options[posts_per_page]" value="<?php if(!empty($posts_per_page)) echo $posts_per_page; ?>" />
                 </div>                        
-
+                        
+                            
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Exclude by post ID','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('you can exclude post by ID, comma(,) separated','post_grid'); ?></p>
+                    <p class="option-title"><?php _e('Offset',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Display posts from the n\'th, if you set <b>Posts per page</b> to -1 will not work offset.',post_grid_textdomain); ?></p>
+                    <input type="text" placeholder="3" name="post_grid_meta_options[offset]" value="<?php echo $offset; ?>" />  
+                </div>
+                
+                              
+                
+                <div class="option-box">
+                    <p class="option-title"><?php _e('Exclude by post ID',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('you can exclude post by ID, comma(,) separated',post_grid_textdomain); ?></p>
                     
                     <input type="text" placeholder="5,3" name="post_grid_meta_options[exclude_post_id]" value="<?php if(!empty($exclude_post_id)) echo $exclude_post_id; else echo ''; ?>" />  
                 </div>
                               
                 
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Post query order','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Query order ascending or descending','post_grid'); ?></p>
+                    <p class="option-title"><?php _e('Post query order',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Query order ascending or descending',post_grid_textdomain); ?></p>
                     
                     <select class="query_order" name="post_grid_meta_options[query_order]" >
                     <option value="ASC" <?php if($query_order=="ASC") echo "selected"; ?>>Ascending</option>
@@ -383,27 +673,33 @@ function meta_boxes_post_grid_input( $post ) {
                 
                 
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Post query orderby','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Query orderby parameter, can select multiple','post_grid'); ?></p>
+                    <p class="option-title"><?php _e('Post query orderby',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Query orderby parameter, can select multiple',post_grid_textdomain); ?></p>
                     
                         <select class="query_orderby" name="post_grid_meta_options[query_orderby][]"  multiple>
-                        <option value="ID" <?php if(in_array("ID",$query_orderby)) echo "selected"; ?>>ID</option>
-                        <option value="date" <?php if(in_array("date",$query_orderby)) echo "selected"; ?>>Date</option>
-                        <option value="rand" <?php if(in_array("rand",$query_orderby)) echo "selected"; ?>>Rand</option>                    
-                        <option value="comment_count" <?php if(in_array("comment_count",$query_orderby)) echo "selected"; ?>>Comment Count</option>
-                        <option value="author" <?php if(in_array("author",$query_orderby)) echo "selected"; ?>>Author</option>               
-                        <option value="title" <?php if(in_array("title",$query_orderby)) echo "selected"; ?>>Title</option>
-                        <option value="name" <?php if(in_array("name",$query_orderby)) echo "selected"; ?>>Name</option>                    
-                        <option value="type" <?php if(in_array("type",$query_orderby)) echo "selected"; ?>>Type</option>
+                        <option value="ID" <?php if(in_array("ID",$query_orderby)) echo "selected"; ?>><?php _e('ID',post_grid_textdomain); ?></option>
+                        <option value="date" <?php if(in_array("date",$query_orderby)) echo "selected"; ?>><?php _e('Date',post_grid_textdomain); ?></option>
+                        <option value="rand" <?php if(in_array("rand",$query_orderby)) echo "selected"; ?>><?php _e('Random',post_grid_textdomain); ?></option>                    
+                        <option value="comment_count" <?php if(in_array("comment_count",$query_orderby)) echo "selected"; ?>><?php _e('Comment Count',post_grid_textdomain); ?></option>
+                        <option value="author" <?php if(in_array("author",$query_orderby)) echo "selected"; ?>><?php _e('Author',post_grid_textdomain); ?></option>               
+                        <option value="title" <?php if(in_array("title",$query_orderby)) echo "selected"; ?>><?php _e('Title',post_grid_textdomain); ?></option>
+                        <option value="name" <?php if(in_array("name",$query_orderby)) echo "selected"; ?>><?php _e('Name',post_grid_textdomain); ?></option>                    
+                        <option value="type" <?php if(in_array("type",$query_orderby)) echo "selected"; ?>><?php _e('Type',post_grid_textdomain); ?></option>
+                        <option value="menu_order" <?php if(in_array("menu_order",$query_orderby)) echo "selected"; ?>><?php _e('Menu order',post_grid_textdomain); ?></option>                       
+                        <option value="meta_value" <?php if(in_array("meta_value",$query_orderby)) echo "selected"; ?>><?php _e('Meta Value',post_grid_textdomain); ?></option>
+                        <option value="meta_value_num" <?php if(in_array("meta_value_num",$query_orderby)) echo "selected"; ?>><?php _e('Meta Value(number)',post_grid_textdomain); ?></option>
                         </select>
                         <br />
-
+                        
+                        
+                        <input type="text" placeholder="meta_key" name="post_grid_meta_options[query_orderby_meta_key]" id="query_orderby_meta_key" value="<?php if(!empty($query_orderby_meta_key)) echo $query_orderby_meta_key; ?>" />
                     
                 </div>                 
 
+                
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Search keyword','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Query post by search keyword, please follow the reference https://codex.wordpress.org/Class_Reference/WP_Query#Search_Parameter','post_grid'); ?></p>
+                    <p class="option-title"><?php _e('Search keyword',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Query post by search keyword, please follow the reference https://codex.wordpress.org/Class_Reference/WP_Query#Search_Parameter',post_grid_textdomain); ?></p>
                     
                     <input type="text" placeholder="Keyword" name="post_grid_meta_options[keyword]" value="<?php if(!empty($keyword)) echo $keyword; else echo ''; ?>" />
                     
@@ -412,11 +708,22 @@ function meta_boxes_post_grid_input( $post ) {
             </li>
             <li style="display: none;" class="box3 tab-box ">
             
+                <div class="option-box">
+                    <p class="option-title"><?php _e('Grid Layout',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Fancy style layouts.',post_grid_textdomain); ?></p>
+                    
+                    
+                    <label>
+                    <input  type="radio" <?php if($grid_layout_name=='layout_grid') echo 'checked' ?> name="post_grid_meta_options[grid_layout][name]" value="layout_grid"><img title="N - N" src="<?php echo post_grid_plugin_url; ?>assets/admin/images/layout_grid.png" />
+                    </label>                    
+                    
+                </div> 
+            
             
             
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Layout','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Choose your layout','post_grid'); ?></p>
+                    <p class="option-title"><?php _e('Content Layout',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Choose your Content layout',post_grid_textdomain); ?></p>
                     
                     <?php
                     $class_post_grid_functions = new class_post_grid_functions();
@@ -429,7 +736,21 @@ function meta_boxes_post_grid_input( $post ) {
                     <select class="select-layout-content" name="post_grid_meta_options[layout][content]" >
                     <?php
 					
-					$layout_content_list = $class_post_grid_functions->layout_content_list();
+					$post_grid_layout_content = get_option('post_grid_layout_content');
+					if(empty($post_grid_layout_content)){
+						
+						$layout_content_list = $class_post_grid_functions->layout_content_list();
+						}
+					else{
+						
+						$layout_content_list = $post_grid_layout_content;
+						
+						}
+					
+					
+					
+					
+					
                     foreach($layout_content_list as $layout_key=>$layout_info){
 						?>
                         <option <?php if($layout_content==$layout_key) echo 'selected'; ?>  value="<?php echo $layout_key; ?>"><?php echo $layout_key; ?></option>
@@ -481,7 +802,13 @@ function meta_boxes_post_grid_input( $post ) {
 						$layout = $class_post_grid_functions->layout_content($layout_content);
 						}
 					else{
-						$layout = $post_grid_layout_content[$layout_content];
+							if(!empty($post_grid_layout_content[$layout_content])){
+								$layout = $post_grid_layout_content[$layout_content];
+								}
+							else{
+								$layout = array();
+								}
+						
 						
 						}
 					
@@ -551,6 +878,9 @@ function meta_boxes_post_grid_input( $post ) {
                     <select class="select-layout-hover" name="post_grid_meta_options[layout][hover]" >
                     <?php
 					
+					
+					
+					
 					$layout_hover_list = $class_post_grid_functions->layout_hover_list();
                     foreach($layout_hover_list as $layout_key=>$layout_info){
 						?>
@@ -576,8 +906,12 @@ function meta_boxes_post_grid_input( $post ) {
             
             
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Skins','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Select grid Skins','post_grid'); ?></p>
+
+                    <p class="option-title"><?php _e('Skins',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Select grid Skins',post_grid_textdomain); ?></p>
+                    
+                    
+                    
                     
                     <?php
                     
@@ -623,7 +957,7 @@ function meta_boxes_post_grid_input( $post ) {
                         
                         <?php
                         
-						include post_grid_plugin_dir.'skins/'.$skin_slug.'/index.php';
+						include post_grid_plugin_dir.'skins/index.php';
 						
 						?>
                         </div>
@@ -644,9 +978,22 @@ function meta_boxes_post_grid_input( $post ) {
             </li>
             <li style="display: none;" class="box4 tab-box ">
             
+            
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Grid Items Width','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Grid item width for different device','post_grid'); ?></p>
+                    <p class="option-title"><?php _e('Masonry enable',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Enable masonry style grid',post_grid_textdomain); ?></p>
+					
+                    <label><input <?php if($masonry_enable=='yes') echo 'checked'; ?> type="radio" name="post_grid_meta_options[masonry_enable]" value="yes" /><?php _e('Yes',post_grid_textdomain); ?></label><br />
+                    <label><input <?php if($masonry_enable=='no') echo 'checked'; ?> type="radio" name="post_grid_meta_options[masonry_enable]" value="no" /><?php _e('No',post_grid_textdomain); ?></label><br />
+
+                </div>
+                
+                
+
+            
+                <div class="option-box">
+                    <p class="option-title"><?php _e('Grid Items Width',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Grid item width for different device',post_grid_textdomain); ?></p>
 					
                     
                     
@@ -668,16 +1015,48 @@ function meta_boxes_post_grid_input( $post ) {
                 </div>
                 
                 
+
+                
+                
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Media Height','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Grid item media height','post_grid'); ?></p>
-					
-                    <label><input <?php if($items_height_style=='auto_height') echo 'checked'; ?> type="radio" name="post_grid_meta_options[height][style]" value="auto_height" />Auto height</label><br />
-                    <label><input <?php if($items_height_style=='fixed_height') echo 'checked'; ?> type="radio" name="post_grid_meta_options[height][style]" value="fixed_height" />Fixed height</label><br />                 
+                    <p class="option-title"><?php _e('Grid Items Background color',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Grid item Background color',post_grid_textdomain); ?></p>
+                    
+                    Background color type:<br>
+                    <label><input <?php if($items_bg_color_type=='fixed') echo 'checked'; ?> type="radio" name="post_grid_meta_options[items_bg_color_type]" value="fixed" /><?php _e('Fixed',post_grid_textdomain); ?></label><br />
+
+                    <br><br>
+                   <?php _e('Fixed Background color:',post_grid_textdomain); ?> <br>
+                    <input type="text" class="color" name="post_grid_meta_options[items_bg_color]" value="<?php echo $items_bg_color; ?>" />
+
+                </div>                
+                
+
+                
+                
+                <div class="option-box">
+                    <p class="option-title"><?php _e('Grid Items Margin',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Grid item margin',post_grid_textdomain); ?></p>
                     
                     <div class="">
+                    <input type="text" name="post_grid_meta_options[margin]" value="<?php echo $items_margin; ?>" />
+                  	</div>                      
 
-                    <input type="text" name="post_grid_meta_options[height][fixed_height]" value="<?php echo $items_fixed_height; ?>" />
+                </div>  
+                
+                
+                
+                
+                <div class="option-box">
+                    <p class="option-title"><?php _e('Media Height',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Grid item media height',post_grid_textdomain); ?></p>
+                    <label><input <?php if($items_media_height_style=='auto_height') echo 'checked'; ?> type="radio" name="post_grid_meta_options[media_height][style]" value="auto_height" /><?php _e('Auto height',post_grid_textdomain); ?></label><br />
+                    <label><input <?php if($items_media_height_style=='fixed_height') echo 'checked'; ?> type="radio" name="post_grid_meta_options[media_height][style]" value="fixed_height" /><?php _e('Fixed height',post_grid_textdomain); ?></label><br />
+                    <label><input <?php if($items_media_height_style=='max_height') echo 'checked'; ?> type="radio" name="post_grid_meta_options[media_height][style]" value="max_height" /><?php _e('Max height',post_grid_textdomain); ?></label><br />                    
+
+                    <div class="">
+
+                    <input type="text" name="post_grid_meta_options[media_height][fixed_height]" value="<?php echo $items_media_fixed_height; ?>" />
                   	</div>                      
 
                 </div>                
@@ -685,22 +1064,64 @@ function meta_boxes_post_grid_input( $post ) {
                 
                 <div class="option-box">
 
-                    <p class="option-title"><?php _e('Featured Image size','post_grid'); ?></p>
+
+					<?php
+
+
+					$get_intermediate_image_sizes =  get_intermediate_image_sizes();
+
+					
+					?>
+
+
+
+                    <p class="option-title"><?php _e('Featured Image size',post_grid_textdomain); ?></p>
                     <select name="post_grid_meta_options[featured_img_size]" >
-                    <option value="full" <?php if($featured_img_size=="full")echo "selected"; ?>><?php _e('Full','post_grid'); ?></option>
-                    <option value="thumbnail" <?php if($featured_img_size=="thumbnail")echo "selected"; ?>><?php _e('Thumbnail','post_grid'); ?></option>
-                    <option value="medium" <?php if($featured_img_size=="medium")echo "selected"; ?>><?php _e('Medium','post_grid'); ?></option>
-                    <option value="large" <?php if($featured_img_size=="large")echo "selected"; ?>><?php _e('Large','post_grid'); ?></option>       
+                    
+                    <?php
+                    
+					foreach($get_intermediate_image_sizes as $size_key){
+						
+						?>
+                        <option value="<?php echo $size_key; ?>" <?php if($featured_img_size==$size_key)echo "selected"; ?>>
+						
+						
+						<?php 
+						
+						$size_key = str_replace('_', ' ',$size_key);
+						$size_key = str_replace('-', ' ',$size_key);						
+						$size_key = ucfirst($size_key);
+
+						echo $size_key; 
+						
+						?>
+                        
+                        </option>
+                        
+                        
+                        <?php
+						
+						
+						}
+					
+					?>
+                    
+    
                        
                     </select>
                     
-                    
-                    <p class="option-title"><?php _e('Media source','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Grid item media source','post_grid'); ?></p>
+ 
+                    <p class="option-title"><?php _e('Media source',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Grid item media source <br />N.B. First gallery from content, First youtube video from content, First vimeo video from content, First MP3 from content, First SoundCloud from content will not retrive for "page"',post_grid_textdomain); ?></p>
                 	<?php
                     if(empty($media_source)){
 						
 						$media_source = $class_post_grid_functions->media_source();
+						}
+					else{
+						//$media_source_main = $class_post_grid_functions->media_source();
+						$media_source = $media_source;
+						
 						}
 					
 					
@@ -719,11 +1140,13 @@ function meta_boxes_post_grid_input( $post ) {
                                 <div class="header">
                                 <input type="hidden" name="post_grid_meta_options[media_source][<?php echo $source_info['id']; ?>][id]" value="<?php echo $source_info['id']; ?>" />
                                 <input type="hidden" name="post_grid_meta_options[media_source][<?php echo $source_info['id']; ?>][title]" value="<?php echo $source_info['title']; ?>" />
-                                
-                                <input <?php if(!empty($source_info['checked'])) echo 'checked'; ?> type="checkbox" name="post_grid_meta_options[media_source][<?php echo $source_info['id']; ?>][checked]" value="<?php echo $source_info['checked']; ?>" />                                
+                                <label>
+                                <input <?php if(!empty($source_info['checked'])) echo 'checked'; ?> type="checkbox" name="post_grid_meta_options[media_source][<?php echo $source_info['id']; ?>][checked]" value="yes" />                                
                                                            
                                 
                                 <?php echo $source_info['title']; ?>
+                                
+                                </label>
                                 </div>
                             </div>
 	
@@ -751,25 +1174,11 @@ jQuery(document).ready(function($)
 
                 </div>                 
                 
-                
-                
-                
-                
-                
-                <div class="option-box">
-                    <p class="option-title"><?php _e('Grid Items Margin','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Grid item margin','post_grid'); ?></p>
-                    
-                    <div class="">
-                    <input type="text" name="post_grid_meta_options[margin]" value="<?php echo $items_margin; ?>" />
-                  	</div>                      
 
-                </div>
-                
                 
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Grid Container options','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Grid container ','post_grid'); ?></p>
+                    <p class="option-title"><?php _e('Grid Container options',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Grid container ',post_grid_textdomain); ?></p>
                     
                     <div class="">
                     Padding: <br>
@@ -824,14 +1233,13 @@ jQuery(document).ready(function($)
             <li style="display: none;" class="box5 tab-box ">
             
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Navigation','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Customize navigation layout.','post_grid'); ?></p>
+                    <p class="option-title"><?php _e('Navigation',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Customize navigation layout.',post_grid_textdomain); ?></p>
                     
                     
                     <div class="grid-layout">
                     	<div class="grid-up">
-						Premium Features
-                        
+
                         </div>
                         <div class="grid-container">
                         <img src="<?php echo post_grid_plugin_url; ?>assets/admin/images/grid.png" />
@@ -842,6 +1250,9 @@ jQuery(document).ready(function($)
                         	<label><input <?php if($pagination_type=='pagination') echo 'checked'; ?> type="radio" name="post_grid_meta_options[nav_bottom][pagination_type]" value="pagination" />Pagination</label>
 
 
+
+
+                      
                             
                         </div> 
                         
@@ -851,19 +1262,43 @@ jQuery(document).ready(function($)
                     
                 </div>
                 
+                <div class="option-box">
+                
+                    <p class="option-title"><?php _e('Pagination',post_grid_textdomain); ?></p>
+                                   
+                    <p class="option-info"><?php _e('Max number of pagination, keep 0 (zero) for auto.',post_grid_textdomain); ?></p>
+					<input type="text" name="post_grid_meta_options[pagination][max_num_pages]" value="<?php echo $max_num_pages; ?>" />
+
+
+                    <p class="option-info"><?php _e('Pagination Previous text',post_grid_textdomain); ?></p>
+					<input type="text" name="post_grid_meta_options[pagination][prev_text]" value="<?php echo $pagination_prev_text; ?>" />
+                    
+                    
+                    <p class="option-info"><?php _e('Pagination Next text',post_grid_textdomain); ?></p>
+					<input type="text" name="post_grid_meta_options[pagination][next_text]" value="<?php echo $pagination_next_text; ?>" />
+                    
+                    
+                    
+
+                </div>                 
+                
+                
                 
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Pagination themes','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Themes for pagination','post_grid'); ?></p>
+                    <p class="option-title"><?php _e('Pagination themes',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Themes for pagination',post_grid_textdomain); ?></p>
                       
-                    <label><input <?php if($pagination_theme=='lite') echo 'checked'; ?> type="radio" name="post_grid_meta_options[nav_bottom][pagination_theme]" value="lite" />Lite</label>
-                    <label><input <?php if($pagination_theme=='dark') echo 'checked'; ?> type="radio" name="post_grid_meta_options[nav_bottom][pagination_theme]" value="dark" />Dark</label> 
+                    <label><input <?php if($pagination_theme=='lite') echo 'checked'; ?> type="radio" name="post_grid_meta_options[nav_bottom][pagination_theme]" value="lite" /><?php _e('Lite',post_grid_textdomain); ?></label>
+                    <label><input <?php if($pagination_theme=='dark') echo 'checked'; ?> type="radio" name="post_grid_meta_options[nav_bottom][pagination_theme]" value="dark" /><?php _e('Dark',post_grid_textdomain); ?></label> 
 
 
                 </div>
                 
+                                
+                
                 
 
+                
                 
                 
             
@@ -872,8 +1307,8 @@ jQuery(document).ready(function($)
             <li style="display: none;" class="box6 tab-box ">
             
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Custom Js','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Add your custom js','post_grid'); ?></p>
+                    <p class="option-title"><?php _e('Custom Js',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Add your custom js',post_grid_textdomain); ?></p>
                     
                     <textarea id="custom_js" name="post_grid_meta_options[custom_js]" ><?php echo $custom_js; ?></textarea>
 
@@ -881,8 +1316,8 @@ jQuery(document).ready(function($)
                 
                 
                 <div class="option-box">
-                    <p class="option-title"><?php _e('Custom CSS','post_grid'); ?></p>
-                    <p class="option-info"><?php _e('Add your custom CSS','post_grid'); ?></p>
+                    <p class="option-title"><?php _e('Custom CSS',post_grid_textdomain); ?></p>
+                    <p class="option-info"><?php _e('Add your custom CSS',post_grid_textdomain); ?></p>
                     
                     <textarea id="custom_css" name="post_grid_meta_options[custom_css]" ><?php echo $custom_css; ?></textarea>
                     

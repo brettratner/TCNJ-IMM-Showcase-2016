@@ -9,17 +9,59 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 	global $post;
 	$post_grid_meta_options = get_post_meta( $post_id, 'post_grid_meta_options', true );
 	
-	if(!empty($post_grid_meta_options['post_types']))
-	$post_types = $post_grid_meta_options['post_types'];
+	if(!empty($post_grid_meta_options['post_types'])){
+		$post_types = $post_grid_meta_options['post_types'];
+		}
+	else{
+		$post_types = array('post');
+		}
 	
+	
+/*
+
+	if(!empty($post_grid_meta_options['categories'])){
+		$categories = $post_grid_meta_options['categories'];
+		}
+	else{
+		$categories = array();
+		}
+
+	if(!empty($post_grid_meta_options['categories_relation'])){
+		$categories_relation = $post_grid_meta_options['categories_relation'];
+		}
+	else{
+		$categories_relation = 'OR';
+		}
+
+*/
 
 
+
+
+/*
+
+	if(!empty($post_grid_meta_options['extra_query_parameter'])){
+		$extra_query_parameter = $post_grid_meta_options['extra_query_parameter'];
+		}
+	else{
+		$extra_query_parameter = '';
+		}
+
+*/
 
 
 	if(!empty($post_grid_meta_options['post_status']))
 	$post_status = $post_grid_meta_options['post_status'];	
 	
-
+	
+	if(!empty($post_grid_meta_options['offset'])){
+		
+		$offset = (int)$post_grid_meta_options['offset'];
+		}
+	else{
+		$offset = '';
+		}
+	
 	
 	//var_dump($offset);
 	
@@ -50,7 +92,29 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 	$query_orderby = $str_orderby;
 	//var_dump($query_orderby);
 	
+	if(!empty($post_grid_meta_options['query_orderby_meta_key'])){
+		$query_orderby_meta_key = $post_grid_meta_options['query_orderby_meta_key'];
+		}
+	else{
+		$query_orderby_meta_key = '';
+		}
 	
+	
+/*
+
+	if(!empty($post_grid_meta_options['meta_query']))
+	$meta_query = $post_grid_meta_options['meta_query'];
+	
+	
+	if(!empty($post_grid_meta_options['meta_query_relation'])){
+		
+		$meta_query_relation = $post_grid_meta_options['meta_query_relation'];	
+		}
+	else{
+		$meta_query_relation = 'OR';
+		}
+
+*/	
 	
 	
 	if(!empty($post_grid_meta_options['keyword'])){
@@ -61,11 +125,53 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 		$keyword = '';
 		}
 	
+	
+	
+	if(!empty($post_grid_meta_options['grid_layout']['name'])){
+		
+		$grid_layout_name = $post_grid_meta_options['grid_layout']['name'];	
+		}
+	else{
+		$grid_layout_name = 'layout_grid';
+		}	
+	
+	
+/*
+
+	if(!empty($post_grid_meta_options['grid_layout']['col_multi'])){
+		
+		$grid_layout_col_multi = $post_grid_meta_options['grid_layout']['col_multi'];	
+		}
+	else{
+		$grid_layout_col_multi = 2;
+		}
+
+*/
+	
+	
+	
+	
+	
+	
+	
 	if(!empty($post_grid_meta_options['layout']['content']))
 	$layout_content = $post_grid_meta_options['layout']['content'];	
 	
 	if(!empty($post_grid_meta_options['layout']['hover']))
 	$layout_hover = $post_grid_meta_options['layout']['hover'];
+	
+/*
+
+	if(!empty($post_grid_meta_options['enable_multi_skin'])){
+		$enable_multi_skin = $post_grid_meta_options['enable_multi_skin'];	
+		}
+	else{
+		$enable_multi_skin = 'no';	
+		
+		}
+
+*/	
+	
 	
 	if(!empty($post_grid_meta_options['skin'])){
 		$skin = $post_grid_meta_options['skin'];	
@@ -81,6 +187,47 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 	if(!empty($post_grid_meta_options['custom_css']))
 	$custom_css = $post_grid_meta_options['custom_css'];
 		
+
+	if(!empty($post_grid_meta_options['masonry_enable'])){
+		
+		$masonry_enable = $post_grid_meta_options['masonry_enable'];
+		}
+	else{
+		$masonry_enable = 'no';
+		
+		}
+
+
+/*
+
+	if(!empty($post_grid_meta_options['lazy_load_enable'])){
+		
+		$lazy_load_enable = $post_grid_meta_options['lazy_load_enable'];
+		}
+	else{
+		$lazy_load_enable = 'no';
+		
+		}
+		
+		
+	if(!empty($post_grid_meta_options['lazy_load_image_src'])){
+		
+		$lazy_load_image_src = $post_grid_meta_options['lazy_load_image_src'];
+		}
+	else{
+		$lazy_load_image_src = post_grid_plugin_url.'assets/admin/gif/ajax-loader-1.gif';
+		
+		}
+*/
+		
+
+
+
+
+
+
+
+
 
 	
 	if(!empty($post_grid_meta_options['width']['desktop'])){
@@ -112,21 +259,71 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 		}	
 		
 		
-	if(!empty($post_grid_meta_options['height']['style'])){
 		
-		$items_height_style = $post_grid_meta_options['height']['style'];
+	if(!empty($post_grid_meta_options['items_bg_color_type'])){
+		
+		$items_bg_color_type = $post_grid_meta_options['items_bg_color_type'];
+		}
+	else{
+		$items_bg_color_type = 'fixed';
+		
+		}		
+		
+		
+	if(!empty($post_grid_meta_options['items_bg_color'])){
+		
+		$items_bg_color = $post_grid_meta_options['items_bg_color'];
+		}
+	else{
+		$items_bg_color = '#fff';
+		
+		}		
+		
+		
+	if(!empty($post_grid_meta_options['item_height']['style'])){
+		
+		$items_height_style = $post_grid_meta_options['item_height']['style'];
 		}
 	else{
 		$items_height_style = 'auto_height';
 		
 		}				
 			
-	if(!empty($post_grid_meta_options['height']['fixed_height'])){
+			
+	if(!empty($post_grid_meta_options['item_height']['fixed_height'])){
 		
-		$items_fixed_height = $post_grid_meta_options['height']['fixed_height'];
+		$items_fixed_height = $post_grid_meta_options['item_height']['fixed_height'];
 		}
 	else{
-		$items_fixed_height = '';
+		$items_fixed_height = '220px';
+		
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	if(!empty($post_grid_meta_options['media_height']['style'])){
+		
+		$items_media_height_style = $post_grid_meta_options['media_height']['style'];
+		}
+	else{
+		$items_media_height_style = 'auto_height';
+		
+		}				
+			
+	if(!empty($post_grid_meta_options['media_height']['fixed_height'])){
+		
+		$items_media_fixed_height = $post_grid_meta_options['media_height']['fixed_height'];
+		}
+	else{
+		$items_media_fixed_height = '';
 		
 		}
 		
@@ -146,6 +343,16 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 		}
 	else{
 		$featured_img_size = 'full';
+		
+		}		
+		
+		
+	if(!empty($post_grid_meta_options['thumb_linked'])){
+		
+		$thumb_linked = $post_grid_meta_options['thumb_linked'];
+		}
+	else{
+		$thumb_linked = 'yes';
 		
 		}		
 		
@@ -188,8 +395,44 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 		
 		}				
 		
-	
-	
+		
+	if(!empty($post_grid_meta_options['nav_top']['filter'])){
+		
+		$nav_top_filter = $post_grid_meta_options['nav_top']['filter'];
+		}
+	else{
+		$nav_top_filter = 'none';
+		
+		}		
+		
+		
+	if(!empty($post_grid_meta_options['nav_top']['filterable_post_per_page'])){
+		
+		$filterable_post_per_page = $post_grid_meta_options['nav_top']['filterable_post_per_page'];
+		}
+	else{
+		$filterable_post_per_page = 'all';
+		
+		}		
+		
+	if(!empty($post_grid_meta_options['nav_top']['active_filter'])){
+		
+		$active_filter = $post_grid_meta_options['nav_top']['active_filter'];
+		}
+	else{
+		$active_filter = '*';
+		
+		}	
+		
+		
+	if(!empty($post_grid_meta_options['nav_top']['search'])){
+		
+		$nav_top_search = $post_grid_meta_options['nav_top']['search'];
+		}
+	else{
+		$nav_top_search = 'none';
+		
+		}		
 		
 		
 	if(!empty($post_grid_meta_options['nav_bottom']['pagination_type'])){
@@ -197,9 +440,45 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 		$pagination_type = $post_grid_meta_options['nav_bottom']['pagination_type'];
 		}
 	else{
-		$pagination_type = 'none';
+		$pagination_type = 'pagination';
 		
 		}		
+		
+		
+	if(!empty($post_grid_meta_options['pagination']['max_num_pages'])){
+		
+		$max_num_pages = $post_grid_meta_options['pagination']['max_num_pages'];
+		}
+	else{
+		$max_num_pages = 0;
+		
+		}
+		
+		
+	if(!empty($post_grid_meta_options['pagination']['prev_text'])){
+		
+		$pagination_prev_text = $post_grid_meta_options['pagination']['prev_text'];
+		}
+	else{
+		$pagination_prev_text = '« Previous';
+		
+		}		
+		
+		
+	if(!empty($post_grid_meta_options['pagination']['next_text'])){
+		
+		$pagination_next_text = $post_grid_meta_options['pagination']['next_text'];
+		}
+	else{
+		$pagination_next_text = 'Next »';
+		
+		}
+		
+		
+		
+		
+		
+		
 		
 	if(!empty($post_grid_meta_options['nav_bottom']['pagination_theme'])){
 		
@@ -220,7 +499,7 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 			}
 		else
 			{
-				$exclude_post_id = explode(',',$exclude_post_id);
+				$exclude_post_id = array_map('intval',explode(',',$exclude_post_id));
 			}
 		
 

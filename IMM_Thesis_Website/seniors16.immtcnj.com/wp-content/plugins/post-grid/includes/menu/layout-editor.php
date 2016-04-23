@@ -24,12 +24,24 @@ else
 			//$post_grid_layout_content = stripslashes_deep($_POST['post_grid_layout_content']);			
 			$post_grid_layout_content = get_option( 'post_grid_layout_content' );
 			
-			$post_grid_layout_content = array_merge($post_grid_layout_content, stripslashes_deep($_POST['post_grid_layout_content']));
+			if(empty($post_grid_layout_content)){
+				$post_grid_layout_content = array();
+				}
+				
+			if(!empty($_POST['post_grid_layout_content']) && is_array($_POST['post_grid_layout_content'])){
+				$post_grid_layout_content_new = stripslashes_deep($_POST['post_grid_layout_content']);
+				}
+			else{
+				$post_grid_layout_content_new = array();
+				}
+				
+			
+			$post_grid_layout_content = array_merge($post_grid_layout_content, $post_grid_layout_content_new);
 			update_option('post_grid_layout_content', $post_grid_layout_content);
 		
 
 			?>
-			<div class="updated"><p><strong><?php _e('Changes Saved.', 'post_grid' ); ?></strong></p></div>
+			<div class="updated"><p><strong><?php _e('Changes Saved.', post_grid_textdomain ); ?></strong></p></div>
 	
 			<?php
 			} 
@@ -39,7 +51,7 @@ else
 
 <div class="wrap">
 
-	<div id="icon-tools" class="icon32"><br></div><?php echo "<h2>".__(post_grid_plugin_name.' - Layout Editor', 'post_grid')."</h2>";?>
+	<div id="icon-tools" class="icon32"><br></div><?php echo "<h2>".post_grid_plugin_name.__(' - Layout Editor', post_grid_textdomain)."</h2>";?>
 		<form  method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
             <input type="hidden" name="post_grid_hidden" value="Y">
             <?php settings_fields( 'post_grid_plugin_options' );
@@ -59,7 +71,7 @@ else
 				$class_post_grid_functions = new class_post_grid_functions();
 				
             ?>
-		<div class="layout-editor para-settings">
+		<div class="layout-editor post-grid-layout-editor para-settings">
         
         
         
@@ -101,7 +113,14 @@ else
 						$layout = $class_post_grid_functions->layout_content($layout_content);
 						}
 					else{
-						$layout = $post_grid_layout_content[$layout_content];
+						
+						if(!empty($post_grid_layout_content[$layout_content])){
+							$layout = $post_grid_layout_content[$layout_content];
+							}
+						else{
+							$layout = array();
+							}
+						
 						
 						}
 					
@@ -135,24 +154,25 @@ else
                             ?>
                             <a href="#"><img style="width:100%; height:auto;" src="<?php echo post_grid_plugin_url; ?>assets/admin/images/thumb.png" /></a>
                             <?php
-                            }
+                            }								
+							
 							
                         elseif($item_key=='title'){
                             
                             ?>
                             Lorem Ipsum is simply
-                            
                             <?php
-                            }								
-                            
+                            }	
+							
                         elseif($item_key=='title_link'){
                             
                             ?>
                             <a href="#">Lorem Ipsum is simply</a>
                             <?php
-                            }	
+                            }							
 							
-							
+														
+                            
                         elseif($item_key=='excerpt'){
                             
                             ?>
@@ -184,34 +204,7 @@ else
                 </div>
                 
                 <?php } ?>
-                
-                 <?php if(isset($_GET['layout_hover'])) {?>
-                <div class="hover">
-                <div class="name">
-                
-                <select class="select-layout-hover" name="post_grid_meta_options[layout][hover]" >
-                <?php
-                
-                $layout_hover_list = $class_post_grid_functions->layout_hover_list();
-                foreach($layout_hover_list as $layout_key=>$layout_info){
-                    ?>
-                    <option  value="<?php echo $layout_key; ?>"><?php echo $layout_key; ?></option>
-                    <?php
-                    
-                    }
-                ?>
-                </select>
-                
-                Hover</div>
-                <div class="layer-hover">
-                <div class="title">Hello Title</div>
-                <div class="content">There are many variations of passages of Lorem Ipsum available, but the majority have.</div> 
-                </div>
-                
-                
-                </div> 
-                
-                <?php } ?>                   
+                   
             </div>
                     
         	<br />
@@ -219,17 +212,75 @@ else
             
                 <?php
 				
+				$layout_content_list = $class_post_grid_functions->layout_content_list();
+				
+				
 					if(empty($layout)){$layout = array(); 
 					
-					echo 'you haven\'t selecetd any layout.';
+					echo 'you haven\'t selecetd any layout. please select here';
+					
+					
+					?>
+					<select class="layout-content">
+                    <option selected value="">Please select</option>                    
+                    
+						<?php
+                        
+					$post_grid_layout_content = get_option('post_grid_layout_content');
+					if(empty($post_grid_layout_content)){
+						
+						$layout_content_list = $class_post_grid_functions->layout_content_list();
+						}
+					else{
+						
+						$layout_content_list = $post_grid_layout_content;
+						
+						}
+						
+						
+                       // $layout_content_list = $class_post_grid_functions->layout_content_list();
+                        foreach($layout_content_list as $layout_key=>$layout_info){
+                            ?>
+                            <option <?php if($layout_content==$layout_key) echo 'selected'; else "" ?>  value="<?php echo $layout_key; ?>"><?php echo $layout_key; ?></option>
+                            <?php
+                            
+                            }
+                        ?>
+					</select>
+	
+   
+<script>
+jQuery(document).ready(function($)
+	{
+		
+		$(document).on('change', '.layout-content', function()
+			{
+
+				var layout = $(this).val();
+					
+					if(layout!=null){
+						window.location.href = "<?php echo admin_url().'edit.php?post_type=post_grid&page=post_grid_layout_editor&layout_content=';?>"+layout;
+						}
+
+			})
+		
+		})
+</script>
+    
+    
+                    
+                    <?php
+					
+					
+					
 					
 					}
 					$i=0;
 					foreach($layout as $key=>$items){
 						
 						?>
-                        <div class="items">
-                        <div class="header"><span class="remove">X</span><?php echo $items['name']; ?></div>
+                        <div class="items" id="<?php echo $key; ?>">
+                        <div class="header"><span class="remove"><i class="fa fa-times"></i></span><?php echo $items['name']; ?></div>
                         	<div class="options">
 							<?php
                             
@@ -240,19 +291,41 @@ else
 									 
 									?>
 	<br />
-    								CSS: <br />
+    								<?php _e('CSS:',post_grid_textdomain ); ?> <br />
+                                    <a target="_blank" href="http://www.pickplugins.com/demo/post-grid/sample-css-for-layout-editor/">Sample css</a><br />
 									<textarea autocorrect="off" autocapitalize="off" spellcheck="false"  style="width:50%" class="custom_css" item_id="<?php echo $items['key']; ?>" name="post_grid_layout_content[<?php echo $layout_content; ?>][<?php echo $i; ?>][<?php echo $item_key; ?>]"><?php echo $item_info; ?></textarea><br />
 		
 									
 		
 									<?php
 									 
-									 }
 									 
+									 
+									 
+									 
+									 }
+								elseif($item_key=='css_hover'){
+									 
+									?>
+								<br />
+    								 <?php _e('CSS Hover:',post_grid_textdomain ); ?><br />
+                                    
+									<textarea autocorrect="off" autocapitalize="off" spellcheck="false"  style="width:50%" class="custom_css" item_id="<?php echo $items['key']; ?>" name="post_grid_layout_content[<?php echo $layout_content; ?>][<?php echo $i; ?>][<?php echo $item_key; ?>]"><?php echo $item_info; ?></textarea><br />
+		
+									
+		
+									<?php
+									 
+									 
+									 
+									 
+									 
+									 }
+									  
 								elseif($item_key=='char_limit'){
 										?>
                                         	
-                                        	Character limit: <br />
+                                        	<?php _e('Character limit:',post_grid_textdomain ); ?> <br />
 											<input type="text"  name="post_grid_layout_content[<?php echo $layout_content; ?>][<?php echo $i; ?>][<?php echo $item_key; ?>]" value="<?php echo $items['char_limit']; ?>" /><br />
 	
 										<?php
@@ -271,16 +344,74 @@ else
 									if($item_key=='field_id'){
 										?>
                                         	
-                                        	Meta Key: <br />
+                                        	<?php _e('Meta Key:',post_grid_textdomain ); ?> <br />
 											<input type="text"  name="post_grid_layout_content[<?php echo $layout_content; ?>][<?php echo $i; ?>][<?php echo $item_key; ?>]" value="<?php echo $item_info; ?>" /><br />
 	
 										<?php
 										
 										}
-									
-									
-									
-                                 
+										
+									if($item_key=='wrapper'){
+										?>
+                                        	
+                                            
+                                            <?php //var_dump($item_info);
+											
+											$key_value = htmlentities($item_info);
+											
+											if(empty($key_value)){
+												$key_value = '%s';
+												}
+											
+											 ?>
+                                            <br />
+                                        	<?php _e('Wrapper:',post_grid_textdomain ); ?>  
+                                            <br />
+                                            <?php _e('use %s where you want to repalce the meta value.<pre>&lt;div&gt;Before %s - %s After&lt;/div&gt;</pre>',post_grid_textdomain ); ?>
+                                            <br />
+											<input type="text"  name="post_grid_layout_content[<?php echo $layout_content; ?>][<?php echo $i; ?>][<?php echo $item_key; ?>]" value="<?php echo $key_value; ?>" /><br />
+	
+										<?php
+										
+										}										
+										
+										
+									if($item_key=='html'){
+										?>
+                                        	
+                                            
+                                            <?php //var_dump($item_info);
+											
+											$custom_html = htmlentities($item_info);
+											
+											if(empty($custom_html)){
+												$custom_html = '';
+												}
+											
+											 ?>
+                                            <br />
+                                        	<?php _e('HTML:', post_grid_textdomain ); ?><br />
+											<input type="text"  name="post_grid_layout_content[<?php echo $layout_content; ?>][<?php echo $i; ?>][<?php echo $item_key; ?>]" value="<?php echo $custom_html; ?>" /><br />
+	
+										<?php
+										
+										}										
+										
+										
+										
+										
+										
+										
+
+									if($item_key=='read_more_text'){
+										?>
+                                        	
+                                        	<?php _e('Read more text:',post_grid_textdomain ); ?> <br />
+											<input type="text"  name="post_grid_layout_content[<?php echo $layout_content; ?>][<?php echo $i; ?>][<?php echo $item_key; ?>]" value="<?php echo htmlentities($item_info); ?>" /><br />
+	
+										<?php
+										
+										}										
                                 
                                  }
                             ?>
@@ -306,7 +437,7 @@ else
  jQuery(document).ready(function($)
 	{
 		$(function() {
-		$( ".css-editor" ).sortable();
+		$( ".css-editor" ).sortable({ handle: '.header' });
 		//$( ".items-container" ).disableSelection();
 		});
 
@@ -314,15 +445,8 @@ else
 
 </script>
 
-
-
-
-
-
-
-
         <p class="submit">
-            <input class="button button-primary" type="submit" name="Submit" value="<?php _e('Save Changes','post_grid' ); ?>" />
+            <input class="button button-primary" type="submit" name="Submit" value="<?php _e('Save Changes',post_grid_textdomain ); ?>" />
         </p>
 
 

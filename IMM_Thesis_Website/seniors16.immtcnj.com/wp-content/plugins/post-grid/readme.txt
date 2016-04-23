@@ -3,8 +3,8 @@
 	Donate link: http://pickplugins.com
 	Tags: post grid, grid, custom post grid, post type grid, grid display, category filter, custom post, filter, filtering, grid, layout, list, masonry, post, post filter, post layout, taxonomy, taxonomy filter, 
 	Requires at least: 3.8
-	Tested up to: 4.4.0
-	Stable tag: 2.0.5
+	Tested up to: 4.5
+	Stable tag: 2.0.7
 	License: GPLv2 or later
 	License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,6 +23,7 @@ Use any where by short-codes and easy customize via short-code generator page, y
 * [Buy Premium! &raquo;](http://www.pickplugins.com/item/post-grid-crete-awesome-grid-from-any-post-type-for-wordpress/)
 
 
+
 <strong>Plugin Features</strong><br />
 
 * Fully responsive and mobile ready.
@@ -36,27 +37,35 @@ Use any where by short-codes and easy customize via short-code generator page, y
 * Custom grid width.
 * Custom grid thumbnail height.
 
-<strong> premium support for</strong>
-
-* WooCommerce.
-* Easy Digital Downloads.
-* WP eCommerce
-
-
 <strong> premium features </strong><br />
 
 * 29+ ready skin.
 * Query post by taxonomy(multiple) & terms(multiple).
-* Display Meta Fields.
-* Display YouTube, vimeo video, soundcloud, mp3, gallery on thumbnail area.
+* support for WooCommerce, Easy Digital Downloads, WP eCommerce.
+* Display Meta Fields. Custom wrapper (HTML) for meta values display.
+* Display Short-code via Meta Fields.
+* Display YouTube, vimeo video, soundcloud, mp3, gallery, Font Awesome icons on thumbnail area.
 * Filterable Grid by custom taxonomy & terms.
 * Ajax load more.
 * Extend grid skin by filter hook.
+* Pagination custom Next , Previous text.
+* Add custom HTML(Shortcodes) via layout editor.
+* Create unlimited layout via layout editor.
+* Post grid for Archive page(category.php, tags.php , custom taxonomy & terms page).
+* Extra query parameter.
+* Create unlimited layout via layout editor.
+* Add custom HTML(Shortcodes) via layout editor.
 
 
-<strong>Video Tutorial(with premium version interface)</strong><br />
-https://www.youtube.com/watch?v=WynnnEl0ncM
+<strong>Video Tutorial(with premium version interface)</strong>
 
+* [How to install activate & license!&raquo;](https://youtu.be/gzH0uO6IReE)
+* [How to create Post Grid!&raquo;](https://youtu.be/6HwLUBqT7i4)
+* [Post Grid – Query Post!&raquo;](https://youtu.be/FKIcey0ujgo)
+* [Post Grid – Grid Layout!&raquo;](https://youtu.be/g2GSb4chGXQ)
+* [Post Grid – Navigation!&raquo;](https://youtu.be/B12CglBCLJY)
+* [Post Grid – Layout Editor!&raquo;](https://youtu.be/z_tygQ12aJk)
+* [Post Grid – Settings!&raquo;](https://youtu.be/JsPKfENJL8I)
 
 
 == Installation ==
@@ -70,7 +79,7 @@ After activate plugin you will see "Post Grid" menu at left side on WordPress da
 <strong>How to use on page or post</strong><br />
 When Post Grid options setup done please publish Post Grid as like post or page<br />
 
-and then copy shortcode from top of <strong>Post Grid Options</strong> `[post_grid  id="1234" ]`<br />
+and then copy shortcode from top of <strong>Post Grid Options</strong> `[post_grid id="1234"]`<br />
 
 then paste this shortcode anywhere in your page to display grid<br />
 
@@ -84,17 +93,18 @@ then paste this shortcode anywhere in your page to display grid<br />
 
 1. screenshot-1
 2. screenshot-2
-3. screenshot-3
-4. screenshot-4
-5. screenshot-5
-6. screenshot-6
-7. screenshot-7
-
-
-
-
 
 == Changelog ==
+
+	= 2.0.7 =
+    * 23/04/2016 fix - social share button(Incrementing) issue fixed.
+
+	= 2.0.6 =
+    * 21/04/2016 add - display alt text for featured images.
+    * 21/04/2016 add - display alt text for gallery images.
+    * 21/04/2016 add - Export Content Layouts.	
+    * 21/04/2016 add - delete option for exported files.
+    * 21/04/2016 add - translation added.	
 
 
 	= 2.0.5 =

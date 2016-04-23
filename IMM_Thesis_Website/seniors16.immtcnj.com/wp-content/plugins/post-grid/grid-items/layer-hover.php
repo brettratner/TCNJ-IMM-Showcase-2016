@@ -6,4 +6,4 @@
 
 if ( ! defined('ABSPATH')) exit;  // if direct access
 
-	$html.='<div class="layer-hover"></div>';
+	//$html.='<div class="layer-hover"></div>';

@@ -8,22 +8,143 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 	
 	$html .= '<div class="pagination '.$pagination_theme.'">';
 	
+	
+	
+	if($max_num_pages==0){
+		
+		$max_num_pages = $wp_query->max_num_pages;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 		if($pagination_type=='pagination'){
 			
-			$html .= '<div class="paginate">';
-			$big = 999999999; // need an unlikely integer
-			$html .= paginate_links( array(
-				'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-				'format' => '?paged=%#%',
-				'current' => max( 1, $paged ),
-				'total' => $wp_query->max_num_pages,
-				'prev_text'          => __('« Previous', post_grid_textdomain),
-				'next_text'          => __('Next »', post_grid_textdomain),
-				) );
-		
-			$html .= '</div >';	
+			if($nav_top_filter=='yes'){
+				
+				$html .= '<div class="pager-list pager-list-'.$post_id.'"></div >';
+				}
+			else{
+				$html .= '<div class="paginate">';
+				
+
+
+				$big = 999999999; // need an unlikely integer
+
+				$html .= paginate_links( array(
+					'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+					'format' => '?paged=%#%',
+					'current' => max( 1, $paged ),
+					'total' => $max_num_pages,
+					'prev_text'          => $pagination_prev_text,
+					'next_text'          => $pagination_next_text,
+					) );
+
+
+	/*
+			
+				$pagination_base = add_query_arg( $paging, '%#%' );
+				
+					$html .= paginate_links( array(
+						'type' 		=> '',
+						'base' 		=> $pagination_base,
+						'format' 	=> '?'. $paging .'=%#%',
+						'current' 	=> max( 1, $wp_query->get('paged') ),
+						'total' 	=> $max_num_pages,
+						'prev_text'          => $pagination_prev_text,
+						'next_text'          => $pagination_next_text,	
+						
+						
+					));
+			
+			
+	*/		
+			
+			
+			
+			
+			
+			
+
+			
+				$html .= '</div >';	
+				
+				}
+	
 			
 			}
+			
+		elseif($pagination_type=='jquery-pagination'){
+			
+			$html .= '<div class="pager-list pager-list-'.$post_id.'"></div >';
+			
+			
+
+		$html .= '<script>
+			jQuery(document).ready(function($) {
+				
+					$(function(){
+					
+						$("#post-grid-'.$post_id.'").mixItUp({
+				pagination: {
+					limit: '.$filterable_post_per_page.',
+					prevButtonHTML: "'.$pagination_prev_text.'",
+					nextButtonHTML: "'.$pagination_next_text.'",
+	
+					
+				},
+				selectors: {
+					filter: ".filter",
+					pagersWrapper: ".pager-list-'.$post_id.'",
+					
+					
+				},';
+				
+		if(!empty($active_filter) && $active_filter!= 'all')
+			{
+			
+
+			$html .= '
+			load: {
+				filter: ".'.$active_filter.'"
+			}, ';
+
+			}
+
+				$html .= 'controls: {
+					enable: true
+				}
+				
+						});
+					
+					});
+					
+			
+					
+					
+			});		
+		</script>';	
+
+		
+		
+		$html .= '<style type="text/css">
+		
+				#post-grid-'.$post_id.' .grid-items .mix{
+				  display: none;
+				}
+	
+				
+				</style>
+				';
+		
+			
+			
+			}
+			
 		elseif($pagination_type=='load_more'){
 			
 			if(!empty($paged))

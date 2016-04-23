@@ -2,20 +2,24 @@
 Admin css
 */
 
-#post_grid_metabox {
+#post_grid_metabox, #post_grid_post_settings {
   background: #f1f1f1 none repeat scroll 0 0;
   border: medium none;
   box-shadow: none;
 }
 
-#post_grid_metabox .hndle {
+#post_grid_metabox .hndle, #post_grid_post_settings .hndle {
   background: rgb(96, 173, 252) none repeat scroll 0 0;
   color: rgb(255, 255, 255);
 }
 
-#post_grid_metabox .handlediv{
+#post_grid_metabox .handlediv, #post_grid_post_settings .handlediv{
   color: rgb(255, 255, 255);
 }
+
+#post_grid_metabox .clear-categories{}
+
+
 
 
 #post_grid_metabox .skin-list{}
@@ -23,7 +27,7 @@ Admin css
 #post_grid_metabox .skin-list .skin-container {
   display: inline-block;
   margin: 10px;
-  width: 45%;
+  width: 275px;
 }
 
 #post_grid_metabox .skin-list .skin-container .checked {
@@ -73,6 +77,14 @@ Admin css
   padding: 5px 0;
 }
 
+
+#post_grid_metabox .skin-list .layer-content > div {
+  padding: 5px 15px !important;
+}
+
+
+
+
 #post_grid_metabox .grid-layout {
   background: rgb(243, 243, 243) none repeat scroll 0 0;
   margin: 20px 0;
@@ -100,11 +112,12 @@ Admin css
   margin: 10px 0;
   overflow: hidden;
   padding: 10px;
+  text-align: center;
 }
 
 
 #post_grid_metabox .grid-layout .grid-container img{
-	width:100%;
+
 }
 
 #post_grid_metabox .grid-layout .grid-bottom {
@@ -124,10 +137,10 @@ Admin css
 #post_grid_metabox .meta-query-list .remove {
   background: rgb(255, 73, 10) none repeat scroll 0 0;
   color: rgb(255, 255, 255);
+  cursor: pointer;
   margin-right: 10px;
   padding: 1px 6px;
 }
-
 
 
 
@@ -171,6 +184,15 @@ Admin css
   width: 50px;
 }
 
+#post_grid_metabox .lazy_load_image {
+  border: 1px solid rgb(221, 221, 221);
+  cursor: pointer;
+  margin: 5px;
+  padding: 10px;
+  vertical-align: top;
+}
+
+
 
 
 
@@ -211,6 +233,7 @@ Admin css
   display: inline-block;
   height: auto;
   margin: 0 10px;
+  min-height: 90px;
   vertical-align: top;
   width: 300px;
 }
@@ -258,6 +281,43 @@ Admin css
   padding: 1px 10px;
   text-decoration: underline;
 }
+
+
+
+.post-grid-settings{}
+
+
+.post-grid-settings .layout-list{}
+.post-grid-settings .layout-list li {
+  background: #eeeeee none repeat scroll 0 0;
+  padding: 6px 10px;
+}
+
+.post-grid-settings .layout-list li .remove-layout {
+  background: #ff641f none repeat scroll 0 0;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 10px;
+  padding: 2px 7px;
+}
+
+.post-grid-settings .remove-layout{}
+
+
+.post-grid-settings .remove_export_content_layout {
+  background: #ff641f none repeat scroll 0 0;
+  color: #fff;
+  cursor: pointer;
+  padding: 0 6px;
+}
+
+
+
+
+
+
+
+
 
 
 

@@ -222,7 +222,7 @@ function wordpress_file_upload_manage_dashboard() {
 		else $echo_str = wfu_manage_mainmenu(WFU_DASHBOARD_DELETE_SHORTCODE_REJECTED);
 	}
 	else {
-		$echo_str = wfu_manage_mainmenu();		
+		$echo_str = wfu_manage_mainmenu();
 	}
 
 	echo $echo_str;

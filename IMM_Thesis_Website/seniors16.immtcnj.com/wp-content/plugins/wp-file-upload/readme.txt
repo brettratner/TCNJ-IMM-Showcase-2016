@@ -137,6 +137,9 @@ There is an option in plugin's settings in Dashboard to relax the CSS rules, so 
 
 == Changelog ==
 
+= 3.8.1 =
+* fixed bug with duplicate userdata IDs in HTML when using more than one userdata occurrences
+
 = 3.8.0 =
 * added webcam option that enables webcam capture functionality
 * added webcammode atribute to define capture mode (screenshots, video or both)
@@ -572,6 +575,9 @@ Added the option to allow anyone to upload files, by setting the attribute uploa
 Initial version.
 
 == Upgrade Notice ==
+
+= 3.8.1 =
+Minor upgrade to fix some bugs.
 
 = 3.8.0 =
 Significant upgrade to introduce some new features and fix some bugs.

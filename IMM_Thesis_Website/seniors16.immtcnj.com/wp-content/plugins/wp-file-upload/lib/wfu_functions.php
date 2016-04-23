@@ -18,7 +18,8 @@ function wfu_upload_plugin_wildcard_to_preg($pattern) {
 }
 
 function wfu_upload_plugin_wildcard_to_mysqlregexp($pattern) {
-	return str_replace("\\", "\\\\", '^'.str_replace(array('\*', '\?', '\[', '\]'), array('.*', '.', '[', ']+'), preg_quote($pattern)).'$');
+	if ( substr($pattern, 0, 6) == "regex:" ) return str_replace("\\", "\\\\", substr($pattern, 6));
+	else return str_replace("\\", "\\\\", '^'.str_replace(array('\*', '\?', '\[', '\]'), array('.*', '.', '[', ']+'), preg_quote($pattern)).'$');
 }
 
 function wfu_upload_plugin_wildcard_match($pattern, $str) {
@@ -302,6 +303,7 @@ function wfu_encode_plugin_options($plugin_options) {
 	$encoded_options .= 'captcha_sitekey='.( isset($plugin_options['captcha_sitekey']) ? wfu_plugin_encode_string($plugin_options['captcha_sitekey']) : "" ).';';
 	$encoded_options .= 'captcha_secretkey='.( isset($plugin_options['captcha_secretkey']) ? wfu_plugin_encode_string($plugin_options['captcha_secretkey']) : "" ).';';
 	$encoded_options .= 'dropbox_accesstoken='.( isset($plugin_options['dropbox_accesstoken']) ? wfu_plugin_encode_string($plugin_options['dropbox_accesstoken']) : "" ).';';
+	$encoded_options .= 'dropbox_defaultpath='.( isset($plugin_options['dropbox_defaultpath']) ? wfu_plugin_encode_string($plugin_options['dropbox_defaultpath']) : "" ).';';
 	$encoded_options .= 'browser_permissions='.( isset($plugin_options['browser_permissions']) ? wfu_encode_array_to_string($plugin_options['browser_permissions']) : "" );
 	return $encoded_options;
 }
@@ -319,13 +321,14 @@ function wfu_decode_plugin_options($encoded_options) {
 	$plugin_options['captcha_sitekey'] = "";
 	$plugin_options['captcha_secretkey'] = "";
 	$plugin_options['dropbox_accesstoken'] = "";
+	$plugin_options['dropbox_defaultpath'] = "";
 	$plugin_options['browser_permissions'] = "";
 
 	$decoded_array = explode(';', $encoded_options);
 	foreach ($decoded_array as $decoded_item) {
 		if ( trim($decoded_item) != "" ) {
 			list($item_key, $item_value) = explode("=", $decoded_item, 2);
-			if ( $item_key == 'shortcode' || $item_key == 'basedir' || $item_key == 'captcha_sitekey' || $item_key == 'captcha_secretkey' || $item_key == 'dropbox_accesstoken' )
+			if ( $item_key == 'shortcode' || $item_key == 'basedir' || $item_key == 'captcha_sitekey' || $item_key == 'captcha_secretkey' || $item_key == 'dropbox_accesstoken' || $item_key == 'dropbox_defaultpath' )
 				$plugin_options[$item_key] = wfu_plugin_decode_string($item_value);
 			elseif ( $item_key == 'browser_permissions' )
 				$plugin_options[$item_key] = wfu_decode_array_from_string($item_value);
@@ -1835,7 +1838,7 @@ function wfu_get_browser_params_from_safe($code) {
 
 //********************* POST/GET Requests Functions ****************************************************************************************************
 
-function wfu_post_request($url, $params, $verifypeer = false) {
+function wfu_post_request($url, $params, $verifypeer = false, $internal_request = false) {
 	$plugin_options = wfu_decode_plugin_options(get_option( "wordpress_file_upload_options" ));
 	if ( isset($plugin_options['postmethod']) && $plugin_options['postmethod'] == 'curl' ) {
 		// POST request using CURL
@@ -1851,6 +1854,12 @@ function wfu_post_request($url, $params, $verifypeer = false) {
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_SSL_VERIFYPEER => $verifypeer
 		);
+		//for internal requests to /wp-admin area that is password protected
+		//authorization is required
+		if ( $internal_request && WFU_VAR("WFU_DASHBOARD_PROTECTED") == "true" ) {
+			$options[CURLOPT_HTTPAUTH] = CURLAUTH_ANY;
+			$options[CURLOPT_USERPWD] = WFU_VAR("WFU_DASHBOARD_USERNAME").":".WFU_VAR("WFU_DASHBOARD_PASSWORD");
+		}
 		curl_setopt_array($ch, $options);
 		$result = curl_exec($ch);
 		curl_close ($ch);
@@ -1879,7 +1888,12 @@ function wfu_post_request($url, $params, $verifypeer = false) {
 			$request = "POST " . $path . " HTTP/1.1\r\n";
             $request .= "Host: " . $host . "\r\n";
             $request .= "Content-Type: application/x-www-form-urlencoded\r\n";
-            $request .= "Content-length: " . strlen($content) . "\r\n";
+			//for internal requests to /wp-admin area that is password protected
+			//authorization is required
+			if ( $internal_request && WFU_VAR("WFU_DASHBOARD_PROTECTED") == "true" ) {
+				$request .= "Authorization: Basic ".base64_encode(WFU_VAR("WFU_DASHBOARD_USERNAME").":".WFU_VAR("WFU_DASHBOARD_PASSWORD"))."\r\n";
+			}
+           $request .= "Content-length: " . strlen($content) . "\r\n";
             $request .= "Connection: close\r\n\r\n";
             $request .= $content . "\r\n\r\n";
 			fwrite($handle, $request, strlen($request));
@@ -1898,12 +1912,20 @@ function wfu_post_request($url, $params, $verifypeer = false) {
 	}
 	else {
 		// POST request using file_get_contents
+		if ( $internal_request && WFU_VAR("WFU_DASHBOARD_PROTECTED") == "true" ) {
+			$url = preg_replace("/^(http|https):\/\//", "$1://".WFU_VAR("WFU_DASHBOARD_USERNAME").":".WFU_VAR("WFU_DASHBOARD_PASSWORD")."@", $url);
+		}
 		$peer_key = version_compare(PHP_VERSION, '5.6.0', '<') ? 'CN_name' : 'peer_name';
 		$http_array = array(
 			'method'  => 'POST',
 			'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
 			'content' => http_build_query($params)
 		);
+		//for internal requests to /wp-admin area that is password protected
+		//authorization is required
+		if ( $internal_request && WFU_VAR("WFU_DASHBOARD_PROTECTED") == "true" ) {
+			$http_array['header'] .= "Authorization: Basic ".base64_encode(WFU_VAR("WFU_DASHBOARD_USERNAME").":".WFU_VAR("WFU_DASHBOARD_PASSWORD"))."\r\n";
+		}
 		if ( $verifypeer ) {
 			$http_array['verify_peer'] = true;
 			$http_array[$peer_key] = 'www.google.com';

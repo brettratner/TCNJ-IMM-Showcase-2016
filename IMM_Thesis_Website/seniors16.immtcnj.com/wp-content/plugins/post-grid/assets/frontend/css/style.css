@@ -16,14 +16,24 @@
   vertical-align: top;
 }
 
-.post-grid .item .layer-media{
-line-height: 0;
+.post-grid .no-post-found {
+  background: #fff none repeat scroll 0 0;
+  color: #666;
+  text-align: center;
+}
+
+
+.post-grid .item .layer-media {
+  line-height: 0;
 }
 
 .post-grid .item .layer-media img {
   border-radius: 0;
   box-shadow: none;
+  width: 100%;
 }
+
+
 .post-grid .item .layer-media iframe {
   width: 100% !important;
   height: auto;
@@ -103,6 +113,7 @@ line-height: 0;
   line-height: normal;
   padding: 3px 10px;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .post-grid .pagination.dark .page-numbers {
@@ -113,6 +124,7 @@ line-height: 0;
   line-height: normal;
   padding: 3px 10px;
   text-decoration: none;
+  cursor: pointer;
 }
 
 
@@ -138,9 +150,32 @@ line-height: 0;
   border: 1px dashed rgb(255, 91, 34);
 }
 
+/* pager-list */
 
+.post-grid .pagination .pager.active {
+  border: medium none !important;
+}
+.post-grid .pagination.lite .pager {
+  background: rgba(220, 220, 220, 0.3) none repeat scroll 0 0;
+  border: 1px solid rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
+  font-size: 14px;
+  line-height: normal;
+  padding: 3px 10px;
+  text-decoration: none;
+  cursor: pointer;
+}
 
-
+.post-grid .pagination.dark .pager {
+  background: rgba(198, 198, 198, 0.7) none repeat scroll 0 0;
+  border: 1px solid rgb(153, 153, 153);
+  color: rgb(255, 255, 255);
+  font-size: 14px;
+  line-height: normal;
+  padding: 3px 10px;
+  text-decoration: none;
+  cursor: pointer;
+}
 
 
 /*Grid Element CSS*/
@@ -198,14 +233,55 @@ line-height: 0;
 }
 
 .post-grid .zoom {
-  background: rgb(221, 221, 221) none repeat scroll 0 0;
+  background: #fff none repeat scroll 0 0;
   border-radius: 50%;
   box-shadow: 0 0 3px 0 rgb(153, 153, 153);
   cursor: pointer;
   display: inline;
+  height: 50px;
   line-height: normal;
-  padding: 6px 10px;
+  text-align: center;
+  width: 50px;
 }
+
+.post-grid .zoom .fa {
+  color: #999;
+  font-size: 24px;
+  margin-top: 12px;
+}
+
+.post-grid .comments-area {
+
+}
+
+.post-grid .commentlist {
+
+}
+
+.post-grid .commentlist li {
+  list-style: outside none none;
+  margin: 0;
+}
+
+
+/*Lazy Load*/
+.post-grid-lazy {
+  text-align: center;
+}
+
+.post-grid-lazy img {
+  border-radius: 3px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+}
+
+
+
+
+
+
+
+
 
 
 

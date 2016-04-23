@@ -9,18 +9,187 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 
 
 
-function post_grid_get_media($media_source, $featured_img_size){
+
+
+
+
+function w4dev_custom_loop_shortcode( $atts )
+{
+	static $w4dev_custom_loop;
+	if( !isset($w4dev_custom_loop) )
+		$w4dev_custom_loop = 1;
+	else
+		$w4dev_custom_loop ++;
+
+	$atts = shortcode_atts( array(
+		'paging'		=> 'pg'. $w4dev_custom_loop,
+		'post_type' 		=> 'post',
+		'posts_per_page' 	=> '5',
+		'post_status' 		=> 'publish'
+	), $atts );
+
+	$paging = $atts['paging'];
+	unset( $atts['paging'] );
+
+	if( isset($_GET[$paging]) )
+		$atts['paged'] = $_GET[$paging];
+	else
+		$atts['paged'] = 1;
+
+	$html  = '';
+	$custom_query = new WP_Query( $atts );
+
+
+	
+
+	if( $custom_query->have_posts() ):
+	$html .= '<ul>';
+		while( $custom_query->have_posts()) : $custom_query->the_post();
+		$html .= sprintf( 
+			'<li><a href="%1$s">%2$s</a></li>',
+			get_permalink(),
+			get_the_title()
+		);
+		endwhile;
+	$html .= '</ul>';
+	endif;
+
+$pagination_base = add_query_arg( $paging, '%#%' );
+
+	$html .= paginate_links( array(
+		'type' 		=> '',
+		'base' 		=> $pagination_base,
+		'format' 	=> '?'. $paging .'=%#%',
+		'current' 	=> max( 1, $custom_query->get('paged') ),
+		'total' 	=> $custom_query->max_num_pages
+	));
+
+	return $html;
+}
+//add_shortcode( 'w4dev_custom_loop', 'w4dev_custom_loop_shortcode' );
+
+
+
+
+function post_grid_add_shortcode_column( $columns ) {
+    return array_merge( $columns, 
+        array( 'shortcode' => __( 'Shortcode', 'post_grid' ) ) );
+}
+add_filter( 'manage_post_grid_posts_columns' , 'post_grid_add_shortcode_column' );
+
+
+function post_grid_posts_shortcode_display( $column, $post_id ) {
+    if ($column == 'shortcode'){
+		?>
+        <input style="background:#bfefff" type="text" onClick="this.select();" value="[post_grid <?php echo 'id=&quot;'.$post_id.'&quot;';?>]" /><br />
+      <textarea cols="50" rows="1" style="background:#bfefff" onClick="this.select();" ><?php echo '<?php echo do_shortcode("[post_grid id='; echo "'".$post_id."']"; echo '"); ?>'; ?></textarea>
+        <?php		
 		
+    }
+}
+add_action( 'manage_post_grid_posts_custom_column' , 'post_grid_posts_shortcode_display', 10, 2 );
+
+
+
+
+
+
+
+function post_grid_get_media($media_source, $featured_img_size, $thumb_linked){
+		
+		
+		$post_grid_post_settings = get_post_meta(get_the_ID(), 'post_grid_post_settings');
+		
+		if(!empty($post_grid_post_settings[0]['custom_thumb_source'])){
+			$custom_thumb_source = $post_grid_post_settings[0]['custom_thumb_source'];
+			
+			}
+		else{
+			$custom_thumb_source = post_grid_plugin_url.'assets/frontend/css/images/placeholder.png';
+			
+			}
+			
+		if(!empty($post_grid_post_settings[0]['font_awesome_icon'])){
+			$font_awesome_icon = $post_grid_post_settings[0]['font_awesome_icon'];
+			
+			}
+		else{
+			$font_awesome_icon = '';
+			
+			}			
+			
+		if(!empty($post_grid_post_settings[0]['font_awesome_icon_color'])){
+			$font_awesome_icon_color = $post_grid_post_settings[0]['font_awesome_icon_color'];
+			
+			}
+		else{
+			$font_awesome_icon_color = '#737272';
+			
+			}
+			
+			
+		if(!empty($post_grid_post_settings[0]['font_awesome_icon_size'])){
+			$font_awesome_icon_size = $post_grid_post_settings[0]['font_awesome_icon_size'];
+			
+			}
+		else{
+			$font_awesome_icon_size = '50px';
+			
+			}
+			
+			
+		if(!empty($post_grid_post_settings[0]['custom_youtube_id'])){
+			$custom_youtube_id = $post_grid_post_settings[0]['custom_youtube_id'];
+			}
+		else{
+			$custom_youtube_id = '';
+			
+			}	
+			
+		if(!empty($post_grid_post_settings[0]['custom_vimeo_id'])){
+			$custom_vimeo_id = $post_grid_post_settings[0]['custom_vimeo_id'];
+			}
+		else{
+			$custom_vimeo_id = '';
+			
+			}		
+			
+		if(!empty($post_grid_post_settings[0]['custom_mp3_url'])){
+			$custom_mp3_url = $post_grid_post_settings[0]['custom_mp3_url'];
+			}
+		else{
+			$custom_mp3_url = '';
+			
+			}			
+					
+			
+		if(!empty($post_grid_post_settings[0]['custom_soundcloud_id'])){
+			$custom_soundcloud_id = $post_grid_post_settings[0]['custom_soundcloud_id'];
+			}
+		else{
+			$custom_soundcloud_id = '';
+			
+			}									
+		
+		
+		//echo '<pre>'.var_export($post_grid_post_settings).'</pre>';
 		
 		$html_thumb = '';
 		
 		
 		if($media_source == 'featured_image'){
 				$thumb = wp_get_attachment_image_src( get_post_thumbnail_id(get_the_ID()), $featured_img_size );
+				
+				//var_dump();
+				
+				$alt_text = get_post_meta(get_post_thumbnail_id(get_the_ID()), '_wp_attachment_image_alt', true);
+				
 				$thumb_url = $thumb['0'];
 				
+
 				if(!empty($thumb_url)){
-					$html_thumb.= '<img src="'.$thumb_url.'" />';
+					$html_thumb.= '<img alt="'.$alt_text.'" src="'.$thumb_url.'" />';				
+					
 					}
 				else{
 					
@@ -32,22 +201,33 @@ function post_grid_get_media($media_source, $featured_img_size){
 			
 		elseif($media_source == 'empty_thumb'){
 
+				$html_thumb.= '<img class="custom" src="'.post_grid_plugin_url.'assets/frontend/css/images/placeholder.png" />';
 
-				$html_thumb.= '<img src="'.post_grid_plugin_url.'assets/frontend/css/images/placeholder.png" />';
 
 
 			}			
 			
 			
+
+			
+			
+					
+			
 			
 			
 		elseif($media_source == 'first_image'){
 
-			global $post, $posts;
+			//global $post, $posts;
+			$post = get_post(get_the_ID());
+			$post_content = apply_filters('the_content', $post->post_content);
+
+			//var_dump('Hello');
+
+
 			$first_img = '';
 			ob_start();
 			ob_end_clean();
-			$output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $post->post_content, $matches);
+			$output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $post_content, $matches);
 			
 			if(!empty($matches[1][0]))
 			$first_img = $matches[1][0];
@@ -56,13 +236,36 @@ function post_grid_get_media($media_source, $featured_img_size){
 				$html_thumb.= '';
 				}
 			else{
+				
 				$html_thumb.= '<img src="'.$first_img.'" />';
+
+				
 				}
 
 			
 			}	
-		
-			
+		else{
+				$thumb = wp_get_attachment_image_src( get_post_thumbnail_id(get_the_ID()), $featured_img_size );
+				
+				//var_dump();
+				
+				$alt_text = get_post_meta(get_post_thumbnail_id(get_the_ID()), '_wp_attachment_image_alt', true);
+				
+				$thumb_url = $thumb['0'];
+				
+
+				if(!empty($thumb_url)){
+					$html_thumb.= '<img alt="'.$alt_text.'" src="'.$thumb_url.'" />';
+					
+					
+					}
+				else{
+					
+					$html_thumb.= '';
+					}
+
+			}
+	
 
 		return $html_thumb;
 				
@@ -76,6 +279,10 @@ function post_grid_get_media($media_source, $featured_img_size){
 
 
 
+
+
+
+
 function post_grid_reset_content_layouts(){
 	
 
@@ -83,12 +290,72 @@ function post_grid_reset_content_layouts(){
 	$layout_content_list = $class_post_grid_functions->layout_content_list();
 	update_option('post_grid_layout_content', $layout_content_list);
 	
-	
+	die();
 	}
 
 
 add_action('wp_ajax_post_grid_reset_content_layouts', 'post_grid_reset_content_layouts');
 add_action('wp_ajax_nopriv_post_grid_reset_content_layouts', 'post_grid_reset_content_layouts');
+
+
+
+
+
+
+
+
+function post_grid_export_content_layouts(){
+	
+
+	$post_grid_layout_content = get_option('post_grid_layout_content');
+	
+	$export_data = serialize($post_grid_layout_content);
+	
+	
+	//$myfile = fopen(post_grid_plugin_dir."/export/export-layout-content-".date('Y-m-d-h').'-'.time().".txt", "w");
+	
+	$myfile = fopen(ABSPATH."wp-content/uploads/post-grid/export-layout-content-".date('Y-m-d-h').'-'.time().".txt", "w");	
+	
+
+	fwrite($myfile, $export_data);
+
+		$file_url = get_bloginfo('url')."/wp-content/uploads/post-grid/export-layout-content-".date('Y-m-d-h').'-'.time().".txt";		
+		//$file_url = post_grid_plugin_url."export/export-layout-content-".date('Y-m-d-h').'-'.time().".txt";
+		
+		
+		
+		echo $file_url;
+		
+	fclose($myfile);
+	
+	
+	die();
+	}
+
+
+add_action('wp_ajax_post_grid_export_content_layouts', 'post_grid_export_content_layouts');
+add_action('wp_ajax_nopriv_post_grid_export_content_layouts', 'post_grid_export_content_layouts');
+
+
+
+
+function post_grid_ajax_remove_export_content_layout(){
+	
+	$file_url = $_POST['file_url'];
+	
+	unlink($file_url);
+	
+	
+	die();
+	}
+
+
+add_action('wp_ajax_post_grid_ajax_remove_export_content_layout', 'post_grid_ajax_remove_export_content_layout');
+add_action('wp_ajax_nopriv_post_grid_ajax_remove_export_content_layout', 'post_grid_ajax_remove_export_content_layout');
+
+
+
+
 
 
 function post_grid_term_slug_list($post_id){
@@ -102,9 +369,21 @@ function post_grid_term_slug_list($post_id){
 		
 		}
 
+	if(!empty($term_list)){
+		foreach($term_list as $term_key=>$term) 
+			{
+				foreach($term as $term_id=>$term){
+					$term_slug_list .= $term->slug.' ';
+					}
+			}
+		
+		}
+
+
 	return $term_slug_list;
 
 	}
+
 
 
 
@@ -145,7 +424,11 @@ function post_grid_posttypes($post_types){
 
 
 
-
+function post_grid_get_categories($post_id){}
+	
+	
+add_action('wp_ajax_post_grid_get_categories', 'post_grid_get_categories');
+add_action('wp_ajax_nopriv_post_grid_get_categories', 'post_grid_get_categories');
 
 
 
@@ -308,7 +591,15 @@ function post_grid_layout_content_ajax(){
 					?>
 					<a hidden="#">Tags 1</a> <a hidden="#">Tags 2</a>
 					<?php
-					}																						
+					}
+					
+				elseif($item_key=='edd_price'){
+					
+					?>
+					$45
+					<?php
+					}					
+																										
 					
 				else{
 					
@@ -334,6 +625,15 @@ function post_grid_layout_content_ajax(){
 	
 add_action('wp_ajax_post_grid_layout_content_ajax', 'post_grid_layout_content_ajax');
 add_action('wp_ajax_nopriv_post_grid_layout_content_ajax', 'post_grid_layout_content_ajax');
+
+
+
+
+
+
+
+
+
 
 
 
@@ -544,26 +844,26 @@ function post_grid_layout_add_elements(){
         $html['item'].= '<img style="width:100%;" src="'.post_grid_plugin_url.'assets/admin/images/thumb.png" />';
 
         }
-        
+		
     elseif($item_key=='thumb_link'){
         
 		$html['item'].= '<a href="#"><img style="width:100%;" src="'.post_grid_plugin_url.'assets/admin/images/thumb.png" /></a>';
 
-        }	
+        }		
 		
-		
+        
     elseif($item_key=='title'){
         
 		$html['item'].= 'Lorem Ipsum is simply';
 
-        }		
+        }
 		
     elseif($item_key=='title_link'){
         
 		$html['item'].= '<a href="#">Lorem Ipsum is simply</a>';
 
-        }
-								
+        }		
+									
         
     elseif($item_key=='excerpt'){
         $html['item'].= 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text';
@@ -645,10 +945,43 @@ function post_grid_layout_add_elements(){
 
         }	
 		
+	/* WP eCommerce Stuff*/
+		
+    elseif($item_key=='WPeC_old_price'){
+         $html['item'].= '$45';
+
+        }
+		
+    elseif($item_key=='WPeC_sale_price'){
+         $html['item'].= '$40';
+
+        }		
+    elseif($item_key=='WPeC_add_to_cart'){
+         $html['item'].= 'Add to Cart';
+
+        }		
+		
+    elseif($item_key=='WPeC_rating_star'){
+         $html['item'].= '*****';
+
+        }			
+    elseif($item_key=='WPeC_categories'){
+         $html['item'].= '<a href="#">Category 1</a> <a href="#">Category 2</a>';
+
+        }		
+		
+		
     elseif($item_key=='meta_key'){
          $html['item'].= 'Meta Key';
 
         }			
+			
+			
+    elseif($item_key=='html'){
+         $html['item'].= 'HTML';
+
+        }			
+			
 																							
         
     else{
@@ -659,19 +992,37 @@ function post_grid_layout_add_elements(){
      $html['item'].= '</div>';
 
 	$html['options'] = '';
-	$html['options'].= '<div class="items">';
-	$html['options'].= '<div class="header"><span class="remove">X</span>'.$layout_items[$item_key].'</div>';
+	$html['options'].= '<div class="items" id="'.$unique_id.'">';
+	$html['options'].= '<div class="header"><span class="remove"><i class="fa fa-times"></i></span>'.$layout_items[$item_key].'</div>';
 	$html['options'].= '<div class="options">';
 	
 	if($item_key=='meta_key'){
 		
 		$html['options'].= 'Meta Key: <br /><input type="text" value="" name="post_grid_layout_content['.$layout.']['.$unique_id.'][field_id]" /><br /><br />';
+		$html['options'].= 'Wrapper: <br />use %s where you want to repalce the meta value. Example<pre>&lt;div&gt;%s&lt;/div&gt;</pre> <br /><input type="text" value="%s" name="post_grid_layout_content['.$layout.']['.$unique_id.'][wrapper]" /><br /><br />';		
+		
+		
 		}
 		
-	if($item_key=='title'  || $item_key=='title_link'  || $item_key=='excerpt' || $item_key=='excerpt_read_more'){
+	if($item_key=='html'){
+		
+		$html['options'].= 'Custom HTML: <br /><input type="text" value="" name="post_grid_layout_content['.$layout.']['.$unique_id.'][html]" /><br /><br />';		
+
+		}		
+		
+		
+		
+	if($item_key=='read_more'){
+		
+		$html['options'].= 'Read more text: <br /><input type="text" value="" name="post_grid_layout_content['.$layout.']['.$unique_id.'][read_more_text]" /><br /><br />';
+		}		
+		
+		
+		
+	if($item_key=='title'  || $item_key=='title_link'  || $item_key=='excerpt' || $item_key=='excerpt_read_more' ){
 		
 		$html['options'].= 'Character limit: <br /><input type="text" value="20" name="post_grid_layout_content['.$layout.']['.$unique_id.'][char_limit]" /><br /><br />';
-		}		
+		}
 		
 		
 
@@ -679,7 +1030,14 @@ function post_grid_layout_add_elements(){
 	<input type="hidden" value="'.$item_key.'" name="post_grid_layout_content['.$layout.']['.$unique_id.'][key]" />
 	<input type="hidden" value="'.$layout_items[$item_key].'" name="post_grid_layout_content['.$layout.']['.$unique_id.'][name]" />
 	CSS: <br />
-	<textarea class="custom_css" name="post_grid_layout_content['.$layout.']['.$unique_id.'][css]" item_id="'.$item_key.'" style="width:50%" spellcheck="false" autocapitalize="off" autocorrect="off">font-size:12px;display:block;padding:10px 0;</textarea>';
+	<a target="_blank" href="http://www.pickplugins.com/demo/post-grid/sample-css-for-layout-editor/">Sample css</a><br />
+	<textarea class="custom_css" name="post_grid_layout_content['.$layout.']['.$unique_id.'][css]" item_id="'.$item_key.'" style="width:50%" spellcheck="false" autocapitalize="off" autocorrect="off">font-size:12px;display:block;padding:10px;</textarea><br /><br />
+	
+	CSS Hover: <br />
+	<textarea class="custom_css" name="post_grid_layout_content['.$layout.']['.$unique_id.'][css_hover]" item_id="'.$item_key.'" style="width:50%" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>';
+	
+	
+	
 	
 	
 	
@@ -700,6 +1058,122 @@ add_action('wp_ajax_post_grid_layout_add_elements', 'post_grid_layout_add_elemen
 add_action('wp_ajax_nopriv_post_grid_layout_add_elements', 'post_grid_layout_add_elements');
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+function post_grid_ajax_load_more(){
+		
+		$html = '';
+		$post_id = (int)$_POST['grid_id'];
+		$per_page = (int)$_POST['per_page'];
+		$terms = (int)$_POST['terms'];
+		
+		
+		include post_grid_plugin_dir.'/grid-items/variables.php';
+		
+		$paged = (int)$_POST['paged'];
+		
+		include post_grid_plugin_dir.'/grid-items/query.php';
+		
+		if ( $wp_query->have_posts() ) :
+			while ( $wp_query->have_posts() ) : $wp_query->the_post();
+
+			
+			$html.='<div class="item skin '.$skin.' '.post_grid_term_slug_list(get_the_ID()).'">';
+			
+			include post_grid_plugin_dir.'/grid-items/layer-media.php';
+			include post_grid_plugin_dir.'/grid-items/layer-content.php';
+			include post_grid_plugin_dir.'/grid-items/layer-hover.php';	
+			
+			$html.='</div>';  // .item		
+	
+			endwhile;
+			wp_reset_query();
+		else:
+		
+		if($pagination_type=='load_more'){
+			$html.= '<script>
+			jQuery(document).ready(function($)
+				{
+					$("#post-grid-'.$post_id.' .load-more").html("'.__('No more post',post_grid_textdomain).'");
+					$("#post-grid-'.$post_id.' .load-more").addClass("no-post");				
+	
+					})
+			
+			
+			</script>';
+			}
+
+
+		
+		
+		endif;
+		
+		echo $html;
+		
+		die();
+		
+	}
+
+add_action('wp_ajax_post_grid_ajax_load_more', 'post_grid_ajax_load_more');
+add_action('wp_ajax_nopriv_post_grid_ajax_load_more', 'post_grid_ajax_load_more');
+
+
+
+
+
+
+
+
+function post_grid_ajax_search(){
+		
+		$html = '';
+		$post_id = (int)$_POST['grid_id'];
+
+		include post_grid_plugin_dir.'/grid-items/variables.php';
+		$keyword = sanitize_text_field($_POST['keyword']);
+		
+		include post_grid_plugin_dir.'/grid-items/query.php';
+		
+		if ( $wp_query->have_posts() ) :
+			while ( $wp_query->have_posts() ) : $wp_query->the_post();
+
+			
+			$html.='<div class="item skin '.$skin.' '.post_grid_term_slug_list(get_the_ID()).'">';
+			
+			include post_grid_plugin_dir.'/grid-items/layer-media.php';
+			include post_grid_plugin_dir.'/grid-items/layer-content.php';
+			include post_grid_plugin_dir.'/grid-items/layer-hover.php';	
+			
+			$html.='</div>';  // .item		
+	
+			endwhile;
+			wp_reset_query();
+		else:
+		
+			$html.='<div class="item">';
+			$html.=__('No Post found',post_grid_textdomain);  // .item	
+			$html.='</div>';  // .item	
+				
+		endif;
+		
+		echo $html;
+		
+		die();
+		
+	}
+
+add_action('wp_ajax_post_grid_ajax_search', 'post_grid_ajax_search');
+add_action('wp_ajax_nopriv_post_grid_ajax_search', 'post_grid_ajax_search');
 
 
 
@@ -736,9 +1210,43 @@ add_action('wp_ajax_nopriv_post_grid_layout_add_elements', 'post_grid_layout_add
 	
 	
 	
+	
+/*
 
+	function post_grid_admin_notices()
+		{
+			$post_grid_license_key = get_option('post_grid_license_key');
+			
+			$html= '';
+
+			if(empty($post_grid_license_key))
+				{
+					$admin_url = get_admin_url();
+					
+					$html.= '<div class="update-nag">';
+					$html.= 'Please activate your license for <b>'.post_grid_plugin_name.' &raquo; <a href="'.$admin_url.'edit.php?post_type=post_grid&page=post_grid_menu_license">License</a></b>';
+					$html.= '</div>';	
+				}
+			else
+				{
+
+				}
+
+			echo $html;
+		}
+	
+	add_action('admin_notices', 'post_grid_admin_notices');
+
+*/
+		
+		
+		
+		
+		
 		
 	
+
+
 	function post_grid_upgrade_notice()
 		{
 			$post_grid_upgrade = get_option('post_grid_upgrade');
@@ -746,7 +1254,7 @@ add_action('wp_ajax_nopriv_post_grid_layout_add_elements', 'post_grid_layout_add
 			
 			$html= '';
 
-			if($post_grid_upgrade == 'done')
+			if(($post_grid_upgrade == 'done') || (version_compare(post_grid_version, '3.0.0') >= 0) )
 				{
 					
 				}
@@ -761,12 +1269,15 @@ add_action('wp_ajax_nopriv_post_grid_layout_add_elements', 'post_grid_layout_add
 		}
 	
 	add_action('admin_notices', 'post_grid_upgrade_notice');
+
+
+
 				
 
 	function post_grid_upgrade_action()
 		{
 			$post_grid_upgrade = get_option('post_grid_upgrade');
-			if($post_grid_upgrade=='done'){
+			if($post_grid_upgrade=='done' ){
 				
 				}
 			else{
@@ -882,7 +1393,7 @@ add_action('wp_ajax_nopriv_post_grid_layout_add_elements', 'post_grid_layout_add
 				
 				
 				
-
+				/*
 				
 					$post_grid_meta_options = array(
 					
@@ -951,7 +1462,75 @@ add_action('wp_ajax_nopriv_post_grid_layout_add_elements', 'post_grid_layout_add
 
 														);
 				
+				*/
+				
 
+					$post_grid_meta_options = array(
+					
+													'post_types'=>'',
+													'categories'=>'',													
+													'categories_relation'=>'OR',
+													'post_status'=>array('publish'),													
+													'offset'=>0,													
+													'posts_per_page'=>'',													
+													'exclude_post_id'=>'',
+													'query_order'=>'',													
+													'query_orderby'=>array(),														
+													'query_orderby_meta_key'=>'',
+													'meta_query'=>array(),
+													'meta_query_relation'=>'OR',
+													'keyword'=>'',
+													'layout'=>array(
+																	'content'=>'flat',
+																	'hover'=>'flat',
+																	),
+													
+													'skin'=>'flat',	
+													'custom_js'=>'',
+													'custom_css'=>'',
+													'width'=>array(
+																	'desktop'=>'',
+																	'tablet'=>'',
+																	'mobile'=>'',																	
+																	),
+																	
+													'height'=>array(
+																	'style'=>'auto_height',
+																	'fixed_height'=>'',															
+																	),																	
+													'media_source'=>array(
+																		'featured_image' => array ('id' => 'featured_image','title' => 'Featured Image','checked' => 'yes',),
+																		'first_image' => array ('id' => 'first_image','title' => 'First images from content','checked' => 'yes',),
+																		'first_gallery' => array ('id' => 'first_gallery','title' => 'First gallery from content','checked' => 'yes',),
+																		'first_youtube' => array ('id' => 'first_youtube','title' => 'First youtube video from content','checked' => 'yes',),
+																		'first_vimeo' => array ('id' => 'first_vimeo','title' => 'First vimeo video from content','checked' => 'yes',),
+																		'first_mp3' => array ('id' => 'first_mp3','title' => 'First MP3 from content','checked' => 'yes',),
+																		'first_soundcloud' => array ('id' => 'first_soundcloud','title' => 'First SoundCloud from content','checked' => 'yes',),
+																		'empty_thumb' => array ('id' => 'empty_thumb','title' => 'Empty thumbnail','checked' => 'yes',),
+										  ),																	
+													'featured_img_size'=>'',																		
+													'margin'=>'5px',																													
+													
+													'container'=>array(
+																	'padding'=>'10px',
+																	'bg_color'=>'',
+																	'bg_image'=>'',																	
+																	),
+																	
+																	
+													'nav_top'=>array(
+																	'filter'=>'',
+																	'active_filter'=>'',																	
+																	'search'=>'none',																
+																	),
+																																		
+													'nav_bottom'=>array(
+																	'pagination_type'=>'',
+																	'pagination_theme'=>'lite',																
+																	),
+																	
+
+														);	
 				
 				
 				

@@ -260,7 +260,10 @@ $GLOBALS["WFU_GLOBALS"] = array(
 $GLOBALS["WFU_GLOBALS"] += array(
 	"WFU_SANITIZE_FILENAME_MODE" => array( "Filename Sanitization Mode", "string", "strict", "The sanitization mode for filenames. It can be 'strict' or 'loose'." ),
 	"WFU_PHP_ARRAY_MAXLEN" => array( "Max PHP Array Length", "string", "10000", "The maximum allowable number of items of a PHP array." ),
-	"WFU_HISTORYLOG_TABLE_MAXROWS" => array( "History Log Table Rows Per Page", "integer", 25, "The number of rows per page of the History Log table." )
+	"WFU_HISTORYLOG_TABLE_MAXROWS" => array( "History Log Table Rows Per Page", "integer", 25, "The number of rows per page of the History Log table." ),
+	"WFU_DASHBOARD_PROTECTED" => array( "Dashboard Is Protected", "string", "false", "If /wp-admin folder is password protected then this variable should be set to 'true' so that internal operations of the plugin can work. The username and password should also be set." ),
+	"WFU_DASHBOARD_USERNAME" => array( "Protected Dashboard Username", "string", "", "Username entry for accessing protected /wp-admin folder." ),
+	"WFU_DASHBOARD_PASSWORD" => array( "Protected Dashboard Password", "string", "", "Password entry for accessing protected /wp-admin folder." )
 );
 //color definitions
 $GLOBALS["WFU_GLOBALS"] += array(

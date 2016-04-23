@@ -15,12 +15,45 @@ class class_post_grid_functions{
 		}
 	
 	
+	
+	public function items_bg_color_values(){
+		
+						$color_values = array(	'#ff398a',
+												'#f992fb',
+												'#eaca93',
+												'#8ed379',
+												'#8b67a5',
+												'#f6b8ad',
+												'#73d4b4',
+												'#00c5cd',
+												'#ff8247',
+												'#ff6a6a',
+												'#00ced1',
+												'#ff7256',
+												'#777777',
+												'#067668',												
+												);
+											
+						$color_values = apply_filters('post_grid_filter_items_bg_color_values', $color_values);				
+											
+						return $color_values;
+											
+		
+		}	
+	
+	
+	
+	
+	
 	public function media_source(){
 		
 						$media_source = array(
-												array('id'=>'featured_image','title'=>'Featured Image','checked'=>'yes'),
-												array('id'=>'first_image','title'=>'First images from content','checked'=>'yes'),
-												array('id'=>'empty_thumb','title'=>'Empty thumbnail','checked'=>'yes'),												
+												'featured_image' =>array('id'=>'featured_image','title'=>'Featured Image','checked'=>'yes'),
+												'first_image'=>array('id'=>'first_image','title'=>'First images from content','checked'=>'yes'),	
+												'empty_thumb'=>array('id'=>'empty_thumb','title'=>'Empty thumbnail','checked'=>'yes'),	
+
+																		
+																																												
 											);
 											
 						$media_source = apply_filters('post_grid_filter_media_source', $media_source);				
@@ -44,17 +77,27 @@ class class_post_grid_functions{
 							'thumb_link'=>'Thumbnail with Link',
 							'excerpt'=>'Excerpt',
 							'excerpt_read_more'=>'Excerpt with Read more',													
-							'post_date'=>'Post date',								
+							'post_date'=>'Post date',
 							'author'=>'Author',
-							'categories'=>'Categories',							
-							'tags'=>'tags',								
+							'categories'=>'Categories',
+							'tags'=>'Tags',								
 							'comments_count'=>'Comments Count',
+							'comments'=>'Comments',
+
+							/* WooCommerce Stuff*/							
+							'wc_full_price'=>'WC Full Price',				
+							'wc_add_to_cart'=>'WC Add to Cart',
+
+							/* Easy Digital Downloads Stuff*/						
+							'edd_price'=>'EDD Price',																		
+							'edd_add_to_cart'=>'EDD Add to Cart',
 							
-							'zoom'=>'Zoom button',
+							/* Extra */	
 							'share_button'=>'Share button',
 							'hr'=>'Horizontal line',
 
-								);
+
+							);
 		
 		$layout_items = apply_filters('post_grid_filter_layout_items', $layout_items);
 		
@@ -67,32 +110,44 @@ class class_post_grid_functions{
 		$layout_content_list = array(
 		
 						'flat'=>array(
-								'0'=>array('key'=>'title', 'char_limit'=>'20', 'name'=>'Title', 'css'=>'display: block;font-size: 21px;line-height: normal;padding: 5px 10px;text-align: left;'),
-								'1'=>array('key'=>'excerpt', 'char_limit'=>'20', 'name'=>'Excerpt', 'css'=>'display: block;font-size: 12px;padding: 5px 10px;text-align: left;'),
-								'2'=>array('key'=>'read_more', 'name'=>'Read more', 'css'=>'display: block;font-size: 12px;font-weight: bold;padding: 0 10px;text-align: left;'),
+								'0'=>array('key'=>'title', 'char_limit'=>'20', 'name'=>'Title', 'css'=>'display: block;font-size: 21px;line-height: normal;padding: 5px 10px;text-align: left;', 'css_hover'=>'', ),
+								'1'=>array('key'=>'excerpt', 'char_limit'=>'20', 'name'=>'Excerpt', 'css'=>'display: block;font-size: 12px;padding: 5px 10px;text-align: left;', 'css_hover'=>''),
+								'2'=>array('key'=>'read_more', 'name'=>'Read more', 'css'=>'display: block;font-size: 12px;font-weight: bold;padding: 0 10px;text-align: left;', 'css_hover'=>''),
 
-								
 									),
 									
 						'flat-center'=>array(												
-								'0'=>array('key'=>'title', 'char_limit'=>'20', 'name'=>'Title', 'css'=>'display: block;font-size: 21px;line-height: normal;padding: 5px 10px;text-align: center;'),
-								'1'=>array('key'=>'excerpt', 'char_limit'=>'20', 'name'=>'Excerpt', 'css'=>'display: block;font-size: 12px;padding: 5px 10px;text-align: center;'),
-								'2'=>array('key'=>'read_more', 'name'=>'Read more', 'css'=>'display: block;font-size: 12px;font-weight: bold;padding: 0 10px;text-align: center;'),
+								'0'=>array('key'=>'title', 'char_limit'=>'20', 'name'=>'Title', 'css'=>'display: block;font-size: 21px;line-height: normal;padding: 5px 10px;text-align: center;', 'css_hover'=>''),
+								'1'=>array('key'=>'excerpt', 'char_limit'=>'20', 'name'=>'Excerpt', 'css'=>'display: block;font-size: 12px;padding: 5px 10px;text-align: center;', 'css_hover'=>''),
+								'2'=>array('key'=>'read_more', 'name'=>'Read more', 'css'=>'display: block;font-size: 12px;font-weight: bold;padding: 0 10px;text-align: center;', 'css_hover'=>''),
 
 									),
 									
 						'flat-right'=>array(												
-								'0'=>array('key'=>'title', 'char_limit'=>'20', 'name'=>'Title', 'css'=>'display: block;font-size: 21px;line-height: normal;padding: 5px 10px;text-align: right;'),
-								'1'=>array('key'=>'excerpt', 'char_limit'=>'20', 'name'=>'Excerpt', 'css'=>'display: block;font-size: 12px;padding: 5px 10px;text-align: right;'),
-								'2'=>array('key'=>'read_more', 'name'=>'Read more', 'css'=>'display: block;font-size: 12px;font-weight: bold;padding: 0 10px;text-align: right;'),					
+								'0'=>array('key'=>'title', 'char_limit'=>'20', 'name'=>'Title', 'css'=>'display: block;font-size: 21px;line-height: normal;padding: 5px 10px;text-align: right;', 'css_hover'=>''),
+								'1'=>array('key'=>'excerpt', 'char_limit'=>'20', 'name'=>'Excerpt', 'css'=>'display: block;font-size: 12px;padding: 5px 10px;text-align: right;', 'css_hover'=>''),
+								'2'=>array('key'=>'read_more', 'name'=>'Read more', 'css'=>'display: block;font-size: 12px;font-weight: bold;padding: 0 10px;text-align: right;', 'css_hover'=>''),					
 									),
 									
 						'flat-left'=>array(												
-								'0'=>array('key'=>'title', 'char_limit'=>'20', 'name'=>'Title', 'css'=>'display: block;font-size: 21px;line-height: normal;padding: 5px 10px;text-align: left;'),
+								'0'=>array('key'=>'title', 'char_limit'=>'20', 'name'=>'Title', 'css'=>'display: block;font-size: 21px;line-height: normal;padding: 5px 10px;text-align: left;', 'css_hover'=>''),
 								
-								'1'=>array('key'=>'excerpt', 'char_limit'=>'20', 'name'=>'Excerpt', 'css'=>'display: block;font-size: 12px;padding: 5px 10px;text-align: left;'),
-								'2'=>array('key'=>'read_more', 'name'=>'Read more', 'css'=>'display: block;font-size: 12px;font-weight: bold;padding: 0 10px;text-align: left;')
+								'1'=>array('key'=>'excerpt', 'char_limit'=>'20', 'name'=>'Excerpt', 'css'=>'display: block;font-size: 12px;padding: 5px 10px;text-align: left;', 'css_hover'=>''),
+								'2'=>array('key'=>'read_more', 'name'=>'Read more', 'css'=>'display: block;font-size: 12px;font-weight: bold;padding: 0 10px;text-align: left;', 'css_hover'=>'')
 									),
+									
+						'wc-center-price'=>array(													
+								'0'=>array('key'=>'title', 'char_limit'=>'20', 'name'=>'Title', 'css'=>'display: block;font-size: 21px;line-height: normal;padding: 5px 10px;text-align: center;', 'css_hover'=>''),
+								'1'=>array('key'=>'wc_full_price', 'name'=>'Price', 'css'=>'background:#f9b013;color:#fff;display: inline-block;font-size: 20px;line-height:normal;padding: 0 17px;text-align: center;', 'css_hover'=>''),
+								'2'=>array('key'=>'excerpt', 'char_limit'=>'20', 'name'=>'Excerpt', 'css'=>'display: block;font-size: 12px;padding: 5px 10px;text-align: center;', 'css_hover'=>''),
+									),								
+									
+						'wc-center-cart'=>array(													
+								'0'=>array('key'=>'title', 'char_limit'=>'20', 'name'=>'Title', 'css'=>'display: block;font-size: 21px;line-height: normal;padding: 5px 10px;text-align: center;', 'css_hover'=>''),
+								'1'=>array('key'=>'wc_add_to_cart', 'name'=>'Add to Cart', 'css'=>'color:#555;display: inline-block;font-size: 13px;line-height:normal;padding: 0 17px;text-align: center;', 'css_hover'=>''),
+								
+								'2'=>array('key'=>'excerpt', 'char_limit'=>'20', 'name'=>'Excerpt', 'css'=>'display: block;font-size: 12px;padding: 5px 10px;text-align: center;', 'css_hover'=>''),
+									),										
 
 						);
 		
@@ -169,24 +224,19 @@ class class_post_grid_functions{
 										'name'=>'SpinRight',
 										'thumb_url'=>'',
 										),
-
-
+		
 						'thumbgoleft'=>array(
 										'slug'=>'thumbgoleft',
 										'name'=>'ThumbGoLeft',
 										'thumb_url'=>'',
 										),																
 
-
-										
 						'thumbrounded'=>array(
 										'slug'=>'thumbrounded',
 										'name'=>'ThumbRounded',
 										'thumb_url'=>'',
-										),																											
-										
-																															
-					
+										),									
+
 						
 						);
 		

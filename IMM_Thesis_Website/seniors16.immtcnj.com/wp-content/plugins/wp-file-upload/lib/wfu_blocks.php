@@ -346,7 +346,7 @@ function wfu_prepare_userdata_block($params, $additional_params, $occurrence_ind
 	$userdata = 'userdata_'.$sid;
 	$hiddeninput = 'hiddeninput_'.$sid;
 
-	$userdata_item["title"] = 'wordpress_file_upload_userdata_'.$sid;
+	$userdata_item["title"] = 'wordpress_file_upload_userdata_'.$sid.( $occurrence_index == 0 ? "" : "_".($occurrence_index - 1) );
 	$userdata_item["hidden"] = false;
 	$userdata_item["width"] = "";
 	$styles1 = "";

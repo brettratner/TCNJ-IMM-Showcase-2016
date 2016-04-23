@@ -2,7 +2,7 @@ jQuery(document).ready(function($)
 	{
 
 		
-		$(document).on('click', '.css-editor .remove', function()
+		$(document).on('click', '.post-grid-layout-editor .css-editor .remove', function()
 			{
 				
 				if(confirm('Do you really want to remove ?')){
@@ -12,7 +12,7 @@ jQuery(document).ready(function($)
 				
 				})
 		
-		$(document).on('click', '.layout-items .item', function()
+		$(document).on('click', '.post-grid-layout-editor .layout-items .item', function()
 			{
 				var item_key = $(this).attr('item_key');
 				var layout = $(this).attr('layout');				
@@ -30,8 +30,8 @@ jQuery(document).ready(function($)
 						{	
 
 							var html = JSON.parse(data)
-							$('#layout-container').append(html['item']);
-							$('.css-editor').append(html['options']);
+							$('.post-grid-layout-editor #layout-container').append(html['item']);
+							$('.post-grid-layout-editor .css-editor').append(html['options']);
 							
 						
 	
@@ -41,12 +41,12 @@ jQuery(document).ready(function($)
 		
 		
 			
-		$(document).on('keyup', '.custom_css', function()
+		$(document).on('keyup', '.post-grid-layout-editor .custom_css', function()
 			{
 				var css_style = $(this).val();
 				var item_id = $(this).attr('item_id');			
 				
-				$('.layer-content .item.'+item_id).attr('style',css_style);
+				$('.post-grid-layout-editor .layer-content .item.'+item_id).attr('style',css_style);
 			})			
 			
 			
